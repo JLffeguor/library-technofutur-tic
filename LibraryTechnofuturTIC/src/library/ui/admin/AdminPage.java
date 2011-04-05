@@ -1,4 +1,4 @@
-package ui.admin;
+package library.ui.admin;
 
 import library.service.GroupService;
 

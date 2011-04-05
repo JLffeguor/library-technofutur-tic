@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import domain.Order;
+import library.domain.Order;
 
 public class OrderDao {
 
