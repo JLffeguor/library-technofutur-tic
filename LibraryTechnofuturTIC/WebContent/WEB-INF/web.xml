@@ -15,12 +15,12 @@
 		<servlet-class>org.vaadin.navigator7.NavigableApplicationServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>navigator7.MyApplication</param-value>
+			<param-value>library.navigator7.MyApplication</param-value>
 		</init-param>
 		<init-param>
 			<description>Navigator7 WebApplication class to start (optionnal)</description>
 			<param-name>webApplication</param-name>
-			<param-value>navigator7.MyWebApplication</param-value>
+			<param-value>library.navigator7.MyWebApplication</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
