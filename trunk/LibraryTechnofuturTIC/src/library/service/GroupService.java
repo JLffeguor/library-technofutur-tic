@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupService {
 	@Autowired GroupDao groupDao;
 	
-	public List<String> getStructuredGroupNames(){
+	public List<String> getGroupNames(){
 		List<String> groupNames = new ArrayList<String>();
 		List<Group> groups = groupDao.getGroups();
 		

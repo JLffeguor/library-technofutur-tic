@@ -5,8 +5,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table (name = "orders")
 public class Order {
 
 	@Id
@@ -24,10 +26,62 @@ public class Order {
 	@OneToOne
 	@JoinColumn(name = "group_id")
 	private Group group;
-	
-	
-	public User getUser(){
+
+	public String getBook_title() {
+		return book_title;
+	}
+
+	public void setBook_title(String book_title) {
+		this.book_title = book_title;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public Long getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(Long isbn) {
+		this.isbn = isbn;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public User getUser() {
 		return user;
 	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public long getId() {
+		return id;
+	}
+	
+	
+	
+	
+	
 
 }

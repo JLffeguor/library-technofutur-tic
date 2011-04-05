@@ -34,11 +34,7 @@
 			<attribute name="org.eclipse.ajdt.aspectpath" value="org.eclipse.ajdt.aspectpath"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/aspectjrt.jar">
-		<attributes>
-			<attribute name="org.eclipse.ajdt.aspectpath" value="org.eclipse.ajdt.aspectpath"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/faton/Desktop/ECLIPSE_FATON/eclipse/plugins/org.aspectj.runtime_1.6.11.20110304135300/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/aspectjweaver.jar">
 		<attributes>
 			<attribute name="org.eclipse.ajdt.aspectpath" value="org.eclipse.ajdt.aspectpath"/>
