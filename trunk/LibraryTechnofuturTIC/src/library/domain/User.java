@@ -22,6 +22,14 @@ public class User {
 	
 	@ManyToOne
 	@JoinColumn(name="group_id")
-	@Column (name="group")
 	private Group group;
+	
+	
+	public String getFirstName(){
+		return firstName;
+	}
+	
+	public String getLastName(){
+		return lastName;
+	}
 }

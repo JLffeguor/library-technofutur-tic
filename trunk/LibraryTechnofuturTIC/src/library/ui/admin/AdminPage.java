@@ -1,5 +1,6 @@
 package library.ui.admin;
 
+import library.dao.OrderDao;
 import library.domain.Order;
 import library.service.GroupService;
 
@@ -8,10 +9,12 @@ import org.vaadin.navigator7.Page;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -26,6 +29,7 @@ public class AdminPage extends HorizontalLayout implements Button.ClickListener{
 	private final VerticalLayout dynamicLayout = new VerticalLayout();
 
 	@Autowired GroupService groupService;
+	@Autowired OrderDao orderDao;
 	
 	public AdminPage(){
 		
@@ -70,13 +74,10 @@ public class AdminPage extends HorizontalLayout implements Button.ClickListener{
         citySelect.setImmediate(true); // send the change to the server at once
         
         final Table table = new Table();
-        table.addContainerProperty("Order", Order.class, null);
         table.addGeneratedColumn("User", new Table.ColumnGenerator() {
-
-//			public Component generateCell(Table source, Object orderObject,
-//					Object columnId) {
-////				return new Label(((Order)orderObject).getUser().getName());
-//			}
+			public Component generateCell(Table source, Object orderObject, Object columnId) {
+				return new Label(((Order)orderObject).getUser().getLastName()+" " + ((Order)orderObject).getUser().getFirstName());
+			}
         	
         });
         
@@ -88,7 +89,7 @@ public class AdminPage extends HorizontalLayout implements Button.ClickListener{
 			
 			public void valueChange(ValueChangeEvent event) {
 				table.setCaption((String)event.getProperty().getValue());
-//				table.setContainerDataSource( new BeanItemContainer<Book>(bookList) );
+				table.setContainerDataSource( new BeanItemContainer<Order>(Order.class, orderDao.getOrderByGroupName((String)event.getProperty().getValue())) );
 				
 			}
 		});
