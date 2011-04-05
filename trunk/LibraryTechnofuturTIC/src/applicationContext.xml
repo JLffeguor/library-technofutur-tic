@@ -19,7 +19,7 @@
 
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="myPersistenceUnit" />
+		<property name="persistenceUnitName" value="library" />
 	</bean>
 
 	<!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
