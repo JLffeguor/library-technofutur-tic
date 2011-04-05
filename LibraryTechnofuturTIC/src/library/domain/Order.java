@@ -19,10 +19,15 @@ public class Order {
 
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 
 	@OneToOne
 	@JoinColumn(name = "group_id")
-	Group group;
+	private Group group;
+	
+	
+	public User getUser(){
+		return user;
+	}
 
 }
