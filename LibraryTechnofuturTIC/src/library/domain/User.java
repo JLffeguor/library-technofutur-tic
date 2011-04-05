@@ -25,6 +25,26 @@ public class User {
 	private Group group;
 	
 	
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 	public String getFirstName(){
 		return firstName;
 	}
