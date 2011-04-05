@@ -2,9 +2,10 @@ package library.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import library.domain.Book;
 
+import org.springframework.stereotype.Repository;
+@Repository
 public class BookDao {
 
 

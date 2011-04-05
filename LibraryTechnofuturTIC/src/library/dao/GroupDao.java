@@ -5,8 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import library.domain.Group;
+import org.springframework.stereotype.Repository;
 
+import library.domain.Group;
+@Repository
 public class GroupDao {
 
 	@PersistenceContext
