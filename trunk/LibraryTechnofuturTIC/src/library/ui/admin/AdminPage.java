@@ -1,9 +1,9 @@
 package ui.admin;
 
+import library.service.GroupService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.navigator7.Page;
-
-import service.GroupService;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
