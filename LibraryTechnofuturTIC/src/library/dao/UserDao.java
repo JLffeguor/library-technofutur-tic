@@ -5,9 +5,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import domain.User;
+import library.domain.User;
 
-public class UsersDao {
+public class UserDao {
 	@PersistenceContext
 	EntityManager em;
 	

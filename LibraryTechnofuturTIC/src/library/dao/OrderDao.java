@@ -12,7 +12,7 @@ public class OrderDao {
 	@PersistenceContext 
 	EntityManager em;
 	
-	public List<Order> getOrderByGroupId(Long id){
-		return em.createQuery("select o from Order o where o.group.id = :id").setParameter("id", id).getResultList();
+	public List<Order> getOrderByGroupName(String name){
+		return em.createQuery("select o from Order o where o.group.id = :name").setParameter("name", name).getResultList();
 	}
 }

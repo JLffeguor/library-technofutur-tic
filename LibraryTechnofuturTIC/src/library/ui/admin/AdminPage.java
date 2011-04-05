@@ -1,5 +1,6 @@
 package library.ui.admin;
 
+import library.domain.Order;
 import library.service.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Table;
@@ -68,7 +70,18 @@ public class AdminPage extends HorizontalLayout implements Button.ClickListener{
         citySelect.setImmediate(true); // send the change to the server at once
         
         final Table table = new Table();
-        table.setColumnHeaders(new String[] { "Titre du manuel", "Auteur", "ISBN", "Nom", "Prix" });
+        table.addContainerProperty("Order", Order.class, null);
+        table.addGeneratedColumn("User", new Table.ColumnGenerator() {
+
+//			public Component generateCell(Table source, Object orderObject,
+//					Object columnId) {
+////				return new Label(((Order)orderObject).getUser().getName());
+//			}
+        	
+        });
+        
+        table.setSelectable(false);
+        
         dynamicLayout.addComponent(citySelect);
         dynamicLayout.addComponent(table);
         citySelect.addListener(new Property.ValueChangeListener() {
