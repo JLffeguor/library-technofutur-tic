@@ -5,8 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import library.domain.Order;
+import org.springframework.stereotype.Repository;
 
+import library.domain.Order;
+@Repository
 public class OrderDao {
 
 	@PersistenceContext 

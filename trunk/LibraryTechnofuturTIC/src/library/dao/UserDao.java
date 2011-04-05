@@ -5,8 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import library.domain.User;
+import org.springframework.stereotype.Repository;
 
+import library.domain.User;
+@Repository
 public class UserDao {
 	@PersistenceContext
 	EntityManager em;
