@@ -5,14 +5,13 @@ import org.vaadin.navigator7.Page;
 
 import service.GroupService;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
-
-import domain.Group;
 
 
 @Page
