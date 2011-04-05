@@ -15,7 +15,7 @@ public class Group {
 	@Id
 	@GeneratedValue
 	private long id;
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 	@Column(name = "numberofstudent")
 	private int numberOfStudent;
