@@ -1,13 +1,18 @@
 package ui.admin;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.navigator7.Page;
 
-import com.vaadin.terminal.Sizeable;
+import service.GroupService;
+
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
+
+import domain.Group;
 
 
 @Page
@@ -17,6 +22,8 @@ public class AdminPage extends HorizontalLayout implements Button.ClickListener{
 	private final Button orderManagement = new Button("Livre à  commander");
 	private final Button groupManagement = new Button("Gestion de group");
 
+	@Autowired GroupService groupService;
+	
 	public AdminPage(){
 
 		VerticalLayout buttonLayout = new VerticalLayout();
@@ -49,8 +56,23 @@ public class AdminPage extends HorizontalLayout implements Button.ClickListener{
 		}
 	}
 	
-	private VerticalLayout getLibraryManagementResults(){
+	private ListSelect selectGroup(){
 		
+		ListSelect citySelect = new ListSelect("Please select a city", groupService.getStructuredGroupNames());
+        citySelect.setRows(7); // perfect length in out case
+        citySelect.setNullSelectionAllowed(true); // user can not 'unselect'
+        citySelect.setImmediate(true); // send the change to the server at once
+        
+        citySelect.addListener(new Property.ValueChangeListener() {
+			
+			public void valueChange(ValueChangeEvent event) {
+			
+				
+			}
+		});
+        
+        return citySelect;
+
 	}
 
 }

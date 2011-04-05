@@ -1,5 +1,7 @@
 package service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,15 @@ import domain.Group;
 public class GroupService {
 	@Autowired GroupDao groupDao;
 	
-	public List<Group> getGroups(){
-		return groupDao.getGroups();
+	public List<String> getStructuredGroupNames(){
+		List<String> groupNames = new ArrayList<String>();
+		List<Group> groups = groupDao.getGroups();
+		
+		for(Group group : groups){
+			groupNames.add(group.getName());
+		}
+		
+		return groupNames;
 	}
-	
 	
 }

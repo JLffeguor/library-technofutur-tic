@@ -16,5 +16,9 @@ public class GroupDao {
 	public List<Group> getGroups() {
 		return em.createQuery("from Group g").getResultList();
 	}
+	
+	public List<Group> getGroupByName(String name){
+		return em.createQuery("select g from Group g where g.name = :name").setParameter("name", name).getResultList();
+	}
 
 }
