@@ -1,5 +1,7 @@
 package library.service;
 
+import java.util.List;
+
 import library.dao.BookDao;
 import library.domain.Book;
 
@@ -21,4 +23,11 @@ public class BookService {
 	public void updateBook(Book book){
 		bookDao.updateBook(book);
 	}
+	public List<Book> searchBookByTitle(String title){
+		return bookDao.searchBookByTitle(title);
+	}
+	public List<Book> searchBookByIsbn(int isbn){
+		return bookDao.searchBookByIsbn(isbn);
+	}
+
 }
