@@ -39,40 +39,40 @@ public class Main {
 //		
 //		create50Book(bookService);
 		
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("library");
-//		EntityManager em = emf.createEntityManager();
-//		
-//		em.getTransaction().begin();
-//		for(int i=0;i<10;i++){
-//			Group group = new Group();
-//			group.setNumberOfStudent(12);
-//			group.setCreationDate(new Date());
-//			group.setName(String.valueOf(i));
-//			em.persist(group);	
-//				for(int j=0;j<12;j++){
-//					User user = new User();
-//					user.setFirstName("faton");
-//					user.setLastName("alia");
-//					user.setGroup(group);
-//					
-//					Order order = new Order();
-//					order.setBook_title("book "+String.valueOf(i));
-//					order.setAuthor("john "+String.valueOf(i));
-//					order.setIsbn(Long.valueOf((long)i));
-//					order.setPrice(35);
-//					order.setUser(user);
-//					order.setGroup(group);
-//		
-//					em.persist(user);
-//					em.persist(order);
-//					
-//				}
-//		
-//		}
-//		em.getTransaction().commit();
-//		
-//		em.close();
-//		emf.close();
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("library");
+		EntityManager em = emf.createEntityManager();
+		
+		em.getTransaction().begin();
+		for(int i=0;i<10;i++){
+			Group group = new Group();
+			group.setNumberOfStudent(12);
+			group.setCreationDate(new Date());
+			group.setName(String.valueOf(i));
+			em.persist(group);	
+				for(int j=0;j<12;j++){
+					User user = new User();
+					user.setFirstName("faton");
+					user.setLastName("alia");
+					user.setGroup(group);
+					
+					Order order = new Order();
+					order.setBook_title("book "+String.valueOf(i));
+					order.setAuthor("john "+String.valueOf(i));
+					order.setIsbn(Long.valueOf((long)i));
+					order.setPrice(35);
+					order.setUser(user);
+					order.setGroup(group);
+		
+					em.persist(user);
+					em.persist(order);
+					
+				}
+		
+		}
+		em.getTransaction().commit();
+		
+		em.close();
+		emf.close();
 		
 	}
 	public static void create50Book(BookService bookService){

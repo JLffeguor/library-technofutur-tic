@@ -24,7 +24,8 @@ public class User {
 	@JoinColumn(name="group_id")
 	private Group group;
 	
-	
+	@Column(name="usercode")
+	private long userCode;
 	public Group getGroup() {
 		return group;
 	}
@@ -48,7 +49,6 @@ public class User {
 	public String getFirstName(){
 		return firstName;
 	}
-	
 	public String getLastName(){
 		return lastName;
 	}
