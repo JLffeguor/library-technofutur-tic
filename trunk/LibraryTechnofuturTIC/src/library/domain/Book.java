@@ -19,8 +19,6 @@ public class Book {
 	private String title;
 	@Column (name="isbn")
 	private String isbn;
-	@Column (name="price")
-	private int price;
 	@Column (name = "category") //eg : Java, Web, PHp ...
 	private String category;
 	
@@ -46,12 +44,6 @@ public class Book {
 	}
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
-	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
 	}
 	public String getCategory() {
 		return category;
