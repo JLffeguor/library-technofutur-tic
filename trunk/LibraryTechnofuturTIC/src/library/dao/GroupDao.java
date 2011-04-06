@@ -24,5 +24,8 @@ public class GroupDao {
 	public void createGroup(Group group){
 		em.persist(group);
 	}
-
+	public void removeGroup(Group group){
+		em.remove(group);
+	}
+	
 }
