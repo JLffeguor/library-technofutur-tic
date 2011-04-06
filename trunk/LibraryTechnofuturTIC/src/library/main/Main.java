@@ -1,15 +1,9 @@
 package library.main;
 
-import java.util.Date;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.ArrayList;
+import java.util.List;
 
 import library.domain.Book;
-import library.domain.Group;
-import library.domain.Order;
-import library.domain.User;
 import library.service.BookService;
 import library.service.GroupService;
 
@@ -20,10 +14,10 @@ public class Main {
 
 	public static void main(String[] args){
 		
-//		ApplicationContext applicationContext=new ClassPathXmlApplicationContext("applicationContext.xml");
-//		BookService bookService=(BookService)applicationContext.getBean("bookService");
-//		GroupService groupService =(GroupService)applicationContext.getBean("groupService");
-//		
+		ApplicationContext applicationContext=new ClassPathXmlApplicationContext("applicationContext.xml");
+		BookService bookService=(BookService)applicationContext.getBean("bookService");
+		GroupService groupService =(GroupService)applicationContext.getBean("groupService");
+		
 //		Book book = new Book();
 //		book.setTitle("java for expert");
 //		book.setAuthor("jerome");
@@ -36,44 +30,17 @@ public class Main {
 //		group.setName("javablackBelt");
 //		group.setNumberOfStudent(12);
 //		groupService.createGroup(group);
-//		
-//		create50Book(bookService);
-		
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("library");
-		EntityManager em = emf.createEntityManager();
-		
-		em.getTransaction().begin();
-		for(int i=0;i<10;i++){
-			Group group = new Group();
-			group.setNumberOfStudent(12);
-			group.setCreationDate(new Date());
-			group.setName(String.valueOf(i));
-			em.persist(group);	
-				for(int j=0;j<12;j++){
-					User user = new User();
-					user.setFirstName("faton");
-					user.setLastName("alia");
-					user.setGroup(group);
-					
-					Order order = new Order();
-					order.setBook_title("book "+String.valueOf(i));
-					order.setAuthor("john "+String.valueOf(i));
-					order.setIsbn(Long.valueOf((long)i));
-					order.setPrice(35);
-					order.setUser(user);
-					order.setGroup(group);
-		
-					em.persist(user);
-					em.persist(order);
-					
-				}
-		
+		List<Book> bookList = new ArrayList<Book>();
+		System.out.println("Search by title : \n");
+		bookList = bookService.searchBookByTitle("java for expert");
+		for(Book b : bookList){
+			System.out.println(b);
 		}
-		em.getTransaction().commit();
-		
-		em.close();
-		emf.close();
-		
+		System.out.println("Search by isbn : \n");
+		bookList = bookService.searchBookByIsbn(25);
+		for(Book b : bookList){
+			System.out.println(b);
+		}
 	}
 	public static void create50Book(BookService bookService){
 		for (int i = 0;i<50;i++){

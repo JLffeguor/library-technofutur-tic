@@ -59,6 +59,8 @@ public class Book {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
+	public String toString(){
+		return "title : " + title + " author : " + author + " isbn : " + isbn;
+	}
 	
 }
