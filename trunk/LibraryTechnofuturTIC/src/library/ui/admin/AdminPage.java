@@ -37,9 +37,11 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 	@Autowired  OrderDao orderDao;
 	
 	public AdminPage(){
+
+		setSizeFull();
 		
 		menu.setStyleName("menu");
-		menu.setWidth("30%");
+		menu.setWidth("250px");
 		menu.setHeight("100%");
 		
 		dynamicLayout.setSpacing(true);
@@ -51,10 +53,8 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 		buttonLayout.setSpacing(true);
 		buttonLayout.setWidth("100%");
 		
-		
-		
 		libraryManagement.setIcon(new ThemeResource("images/library2.png"));
-		orderManagement.setIcon(new ThemeResource("images/order_2.png"));
+		orderManagement.setIcon(new ThemeResource("images/order.png"));
 		groupManagement.setIcon(new ThemeResource("images/groups.png"));
 		
 		libraryManagement.addListener(this);
@@ -73,13 +73,14 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 		HorizontalLayout menuAndData = new HorizontalLayout();
 		menuAndData.setHeight("100%");
 		menuAndData.setWidth("100%");
-		menuAndData.setStyleName("menu");
-//		menuAndData.addComponent(menu);
-//		menuAndData.addComponent(dynamicLayout);
-//		menuAndData.setExpandRatio(dynamicLayout, 1);
+//		menuAndData.setStyleName("menu");
+		menuAndData.addComponent(menu);
+		menuAndData.addComponent(dynamicLayout);
+		menuAndData.setExpandRatio(dynamicLayout, 1);
 		
 		addComponent(buttonLayout);
 		addComponent(menuAndData);
+		setExpandRatio(menuAndData, 1);
 
 	}
 
@@ -123,7 +124,7 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
         
         table.setSelectable(false);
         
-        dynamicLayout.addComponent(citySelect);
+   
         dynamicLayout.addComponent(table);
         citySelect.addListener(new Property.ValueChangeListener() {
 			
