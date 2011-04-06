@@ -31,16 +31,17 @@ public class Main {
 //		group.setNumberOfStudent(12);
 //		groupService.createGroup(group);
 		List<Book> bookList = new ArrayList<Book>();
-		System.out.println("Search by title : \n");
-		bookList = bookService.searchBookByTitle("java for expert");
-		for(Book b : bookList){
-			System.out.println(b);
-		}
+		bookService.deleteBookById(12L);
 		System.out.println("Search by isbn : \n");
-		bookList = bookService.searchBookByIsbn(25);
-		for(Book b : bookList){
-			System.out.println(b);
+		bookList = bookService.searchBookByIsbn("AAA444");
+		if (bookList.isEmpty()){
+			System.out.println("NO RESULT");
+		}else{
+			for(Book b : bookList){
+				System.out.println(b);
+			}
 		}
+		
 	}
 	public static void create50Book(BookService bookService){
 		for (int i = 0;i<50;i++){

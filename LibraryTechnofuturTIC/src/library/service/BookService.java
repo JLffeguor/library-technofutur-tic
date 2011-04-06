@@ -17,8 +17,8 @@ public class BookService {
 	public void addBook(Book book){
 		bookDao.addBook(book);
 	}
-	public void removeBook(Book book){
-		bookDao.removeBook(book);
+	public void deleteBookById(Long id){
+		bookDao.deleteBookById(id);
 	}
 	public void updateBook(Book book){
 		bookDao.updateBook(book);
@@ -26,7 +26,7 @@ public class BookService {
 	public List<Book> searchBookByTitle(String title){
 		return bookDao.searchBookByTitle(title);
 	}
-	public List<Book> searchBookByIsbn(int isbn){
+	public List<Book> searchBookByIsbn(String isbn){
 		return bookDao.searchBookByIsbn(isbn);
 	}
 
