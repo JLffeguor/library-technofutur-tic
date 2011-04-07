@@ -17,36 +17,44 @@ public class Group {
 	private long id;
 	@Column(name = "name", unique = true)
 	private String name;
-	@Column(name = "numberofstudent")
-	private int numberOfStudent;
 	@Column(name = "creationdate")
-	private Date creationDate;
+	private String creationDate;
 	@Column (name = "closingdate")
-	private Date  closingDate;
+	private String  closingDate;
+	@Column(name = "closed")
+	private boolean closed;//all book have been received and distributed
+	@Column(name = "code")
+	private String code;//code generated each time a group is created;
 	
 	
+	public boolean isClosed() {
+		return closed;
+	}
+	public void setClosed(boolean closed) {
+		this.closed = closed;
+	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getNumberOfStudent() {
-		return numberOfStudent;
-	}
-	public void setNumberOfStudent(int numberOfStudent) {
-		this.numberOfStudent = numberOfStudent;
-	}
-	public Date getCreationDate() {
+	public String getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
 	}
-	public Date getClosingDate() {
+	public String getClosingDate() {
 		return closingDate;
 	}
-	public void setClosingDate(Date closingDate) {
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setClosingDate(String closingDate) {
 		this.closingDate = closingDate;
 	}
 	public long getId() {

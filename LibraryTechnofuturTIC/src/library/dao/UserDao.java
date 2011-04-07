@@ -6,9 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import library.domain.User;
 @Repository
+@Transactional
 public class UserDao {
 	@PersistenceContext
 	EntityManager em;
