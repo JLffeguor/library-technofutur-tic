@@ -1,4 +1,4 @@
-@import "../reindeer/styles.css";        /* for 'extend' vaadin themes.*/
+@import "../myTheme/styles.css";        /* for 'extend' vaadin themes.*/
 /***************************************************** For the PageTemplate classes of Navigator7 addon. 
   COPY/PASTE THIS in your styles.css */
 
@@ -9,19 +9,16 @@
 .PageTemplate-mainLayout {
     width:100%
 }
-
-/* Full window width */
-.FixedPageTemplate-bandOuterLayout {
-    width:100%
+/* 
+.v-tabsheet-tabs {
+background-color : #D3D3D3;
 }
 
-/* Fixed width inside bandOuterLayout */
-.FixedPageTemplate-bandInnerLayout {
-    margin: 0 auto;  /* Centered inside outer div */
-}
+.v-tabsheet-tabitem-selected {
+ background: #A9A9A9;
+} */
 
-/* Layout containing your pages (probably between a header and a footer) */
-.FixedPageTemplate-layoutPage {
+.padding{
     padding-top:15px;   /* Not too close from the header */
 	padding-bottom:20px; /* Not too close from the footer */
 }
@@ -68,8 +65,5 @@
 
 .menu{background-color: #d0e2ec;}
 
-.gray{
-	backgroun-color: #D3D3D3;
-}
 
 /* END OF COPY/PASTE */

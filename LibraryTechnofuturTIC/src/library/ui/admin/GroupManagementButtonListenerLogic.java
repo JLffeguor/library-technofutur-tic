@@ -1,4 +1,4 @@
-package library.admin.service;
+package library.ui.admin;
 
 import java.util.List;
 
