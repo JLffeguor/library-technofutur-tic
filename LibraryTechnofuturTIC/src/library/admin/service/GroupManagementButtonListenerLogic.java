@@ -7,9 +7,10 @@ import library.domain.Group;
 import library.service.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -20,7 +21,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @Service
-public class GroupManagementButtonLogic {
+public class GroupManagementButtonListenerLogic {
 	
 	@Autowired	GroupDao groupDao;
 	@Autowired	GroupService groupService;
@@ -100,7 +101,19 @@ public class GroupManagementButtonLogic {
 
 			public void buttonClick(ClickEvent event) {
 			dynamicLayout.removeAllComponents();
-			Table table = new Table();
+			final Table table = new Table();
+			
+			table.setSelectable(true);
+			table.setImmediate(true);
+			
+			table.addListener(new Property.ValueChangeListener() {
+			    public void valueChange(ValueChangeEvent event) {
+			       Group g = (Group)table.getValue();
+			 
+			    }
+			});
+			
+			
 			List<Group> groupList = groupDao.getGroups();
 			table.setContainerDataSource( new BeanItemContainer<Group>(Group.class, groupList) );
 			table.setPageLength(groupList.size());
