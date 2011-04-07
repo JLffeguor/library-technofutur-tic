@@ -1,7 +1,5 @@
 package library.ui.admin;
 
-import library.admin.service.GroupManagementButtonListenerLogic;
-import library.admin.service.OrderManagementButtonListenerLogic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -74,7 +72,7 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 		}
 
 		if(button.equals(orderManagement)){
-//			orderManagementService.execute(dynamicLayout);
+			orderManagementService.execute(dynamicLayout);
 		}
 
 		if(button.equals(groupManagement)){
