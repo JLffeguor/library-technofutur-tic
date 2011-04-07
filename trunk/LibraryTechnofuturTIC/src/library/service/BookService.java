@@ -30,6 +30,6 @@ public class BookService {
 		return bookDao.searchBookByIsbn(isbn);
 	}
 	public List<Book> getBooks(){
-		
+		return bookDao.getBooks();
 	}
 }
