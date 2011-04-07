@@ -16,6 +16,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -108,6 +109,7 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
         citySelect.setRows(7); 
         citySelect.setNullSelectionAllowed(false);
         citySelect.setImmediate(true);
+        citySelect.setWidth("100px");
         
         menu.removeAllComponents();
         menu.addComponent(citySelect);
@@ -120,16 +122,18 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
         table.addContainerProperty("Prenom", String.class,  null);
         table.addContainerProperty("Prix", Integer.class,  null);
         table.setPageLength(0);
+        final Label selectedGroup = new Label("Group : ...");
         
         
         table.setSelectable(false);
         
    
         dynamicLayout.addComponent(table);
+        dynamicLayout.addComponent(selectedGroup);
         citySelect.addListener(new Property.ValueChangeListener() {
 			
 			public void valueChange(ValueChangeEvent event) {
-				table.setCaption("Group:"+(String)event.getProperty().getValue());
+				selectedGroup.setValue("Group:"+(String)event.getProperty().getValue());
 				String name =(String)event.getProperty().getValue();
 				List<Order> orderList = orderDao.getOrderByGroupName(name);
 				table.setPageLength(orderList.get(0).getGroup().getNumberOfStudent());
