@@ -3,6 +3,7 @@ package library.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import library.dao.BookDao;
 import library.domain.Book;
 import library.service.BookService;
 import library.service.GroupService;
@@ -15,8 +16,8 @@ public class Main {
 	public static void main(String[] args){
 		
 		ApplicationContext applicationContext=new ClassPathXmlApplicationContext("applicationContext.xml");
-		BookService bookService=(BookService)applicationContext.getBean("bookService");
-		GroupService groupService =(GroupService)applicationContext.getBean("groupService");
+		BookDao bookDao=(BookDao)applicationContext.getBean("bookDao");
+//		GroupService groupService =(GroupService)applicationContext.getBean("groupService");
 		
 //		Book book = new Book();
 //		book.setTitle("java for expert");
@@ -31,9 +32,9 @@ public class Main {
 //		group.setNumberOfStudent(12);
 //		groupService.createGroup(group);
 		List<Book> bookList = new ArrayList<Book>();
-		bookService.deleteBookById(12L);
+		bookDao.deleteBookById(12L);
 		System.out.println("Search by isbn : \n");
-		bookList = bookService.searchBookByIsbn("AAA444");
+		bookList = bookDao.searchBookByIsbn("AAA444");
 		if (bookList.isEmpty()){
 			System.out.println("NO RESULT");
 		}else{
@@ -43,14 +44,14 @@ public class Main {
 		}
 		
 	}
-	public static void create50Book(BookService bookService){
+	public static void create50Book(BookDao bookDao){
 		for (int i = 0;i<50;i++){
 			Book bk = new Book();
 			bk.setAuthor("djey le : " + i);
 			bk.setIsbn("AAA" + i + "" + i + "" + i);
 			bk.setTitle("java for level : " + i*i);
 			bk.setCategory("Java");
-			bookService.addBook(bk);
+			bookDao.addBook(bk);
 		}
 	}
 }

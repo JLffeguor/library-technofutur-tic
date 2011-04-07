@@ -8,7 +8,9 @@ import javax.persistence.PersistenceContext;
 import library.domain.Book;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 @Repository
+@Transactional
 public class BookDao {
 
 

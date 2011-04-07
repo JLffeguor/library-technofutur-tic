@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class GroupService {
 	@Autowired GroupDao groupDao;
 	
@@ -27,11 +26,11 @@ public class GroupService {
 		return groupNames;
 	}
 	
-	public void createGroup (Group group){
-		groupDao.createGroup(group);
-	}
-	public void removeGroup(long id){
-		groupDao.removeGroup(id);
+	public String generatedCode(Group group){
+		String code = (String.valueOf(group.getId())+group.getName());
+		group.setCode(code);
+		groupDao.setCode(group);
+		return code; 
 	}
 	
 }

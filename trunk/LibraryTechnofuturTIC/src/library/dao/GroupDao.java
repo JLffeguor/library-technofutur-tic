@@ -5,10 +5,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.stereotype.Repository;
-
 import library.domain.Group;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 @Repository
+@Transactional
 public class GroupDao {
 
 	@PersistenceContext
@@ -27,5 +29,10 @@ public class GroupDao {
 	public void removeGroup(long id){
 		em.createQuery("delete from Group g where g.id =:id").setParameter("id", id).executeUpdate();
 	}
+	
+	public void setCode(Group group){
+		em.createQuery("update Group g set g.code  = :code  where g.id = :id").setParameter("code", group.getCode()).setParameter("id", group.getId()).executeUpdate();
+	}
+	
 	
 }
