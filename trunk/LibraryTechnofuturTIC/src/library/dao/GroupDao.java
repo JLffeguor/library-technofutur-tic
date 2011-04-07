@@ -24,8 +24,8 @@ public class GroupDao {
 	public void createGroup(Group group){
 		em.persist(group);
 	}
-	public void removeGroup(Group group){
-		em.remove(group);
+	public void removeGroup(long id){
+		em.createQuery("delete from Group g where g.id =:id").setParameter("id", id).executeUpdate();
 	}
 	
 }

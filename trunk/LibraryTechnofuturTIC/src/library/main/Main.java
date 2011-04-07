@@ -48,7 +48,6 @@ public class Main {
 			Book bk = new Book();
 			bk.setAuthor("djey le : " + i);
 			bk.setIsbn("AAA" + i + "" + i + "" + i);
-			bk.setPrice(i);
 			bk.setTitle("java for level : " + i*i);
 			bk.setCategory("Java");
 			bookService.addBook(bk);

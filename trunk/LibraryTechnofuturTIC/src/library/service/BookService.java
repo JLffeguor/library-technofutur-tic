@@ -29,5 +29,7 @@ public class BookService {
 	public List<Book> searchBookByIsbn(String isbn){
 		return bookDao.searchBookByIsbn(isbn);
 	}
-
+	public List<Book> getBooks(){
+		
+	}
 }
