@@ -30,5 +30,8 @@ public class GroupService {
 	public void createGroup (Group group){
 		groupDao.createGroup(group);
 	}
+	public void removeGroup(long id){
+		groupDao.removeGroup(id);
+	}
 	
 }
