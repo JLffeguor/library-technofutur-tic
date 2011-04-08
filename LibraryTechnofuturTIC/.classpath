@@ -175,5 +175,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/aspectjrt.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jxl.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
