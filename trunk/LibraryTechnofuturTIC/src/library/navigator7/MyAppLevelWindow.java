@@ -15,7 +15,6 @@ public class MyAppLevelWindow extends HeaderFooterFluidAppLevelWindow {
 		// TODO Auto-generated method stub
 		return new HorizontalLayout();
 	}
-	
 	@Override
 	protected ComponentContainer createComponents() {
 		ComponentContainer cc = super.createComponents();
@@ -23,24 +22,18 @@ public class MyAppLevelWindow extends HeaderFooterFluidAppLevelWindow {
 		
 		VerticalLayout v = (VerticalLayout)this.getContent();
 		v.setExpandRatio(cc, 1);
-		
 		return cc;
 	}
-
 	@Override
 	protected Component createFooter() {
 		// TODO Auto-generated method stub
 		return new HorizontalLayout();
 	}
-	
-
     @Override
     protected Layout createMainLayout(){
     	Layout mainLayout = super.createMainLayout();
     	mainLayout.setHeight("100%");
     	return mainLayout;
     }
-
-	
 
 }

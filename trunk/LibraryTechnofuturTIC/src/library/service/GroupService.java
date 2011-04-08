@@ -8,21 +8,17 @@ import library.domain.Group;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GroupService {
 	@Autowired GroupDao groupDao;
-	
-
-	public List<String> getGroupNames(){
+ 	public List<String> getGroupNames(){
 		List<String> groupNames = new ArrayList<String>();
 		List<Group> groups = groupDao.getGroups();
 		
 		for(Group group : groups){
 			groupNames.add(group.getName());
 		}
-		
 		return groupNames;
 	}
 	
