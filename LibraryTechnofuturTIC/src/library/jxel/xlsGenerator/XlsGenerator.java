@@ -14,6 +14,7 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import library.dao.BookDao;
 import library.domain.Book;
 
@@ -59,6 +60,34 @@ public class XlsGenerator {
 		} catch (WriteException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
+	public void exportListToXls(List<String> listS, int rowLength) {
+		WritableWorkbook workbook;
+		try {
+			workbook = Workbook.createWorkbook(new File("list.xls"));
+
+			WritableSheet sheet = workbook.createSheet("Feuille 1", 0);
+			WritableFont arial14font = new WritableFont(WritableFont.ARIAL, 14);
+			WritableCellFormat arial14format = new WritableCellFormat(arial14font);
+			arial14format.setWrap(true);
+			sheet.setColumnView(1 , 50);
+			int y = 0;
+			for (String s : listS) {
+				for (int x = 0; x < rowLength; x++) {
+					Label label = new Label(x, y, s, arial14format);
+					sheet.addCell(label);
+				}
+				y++;
+			}
+			workbook.write();
+			workbook.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (RowsExceededException e) {
+			throw new RuntimeException(e);
+		} catch (WriteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
