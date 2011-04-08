@@ -34,6 +34,11 @@ public class OrderManagementButtonListenerLogic{
 		dynamicLayout.addComponent(groupButton);
 		dynamicLayout.addComponent(table);
 		
+		Button excel = new Button("Créer fichier excel");
+		excel.addStyleName("big default");
+		dynamicLayout.addComponent(excel);
+		dynamicLayout.setExpandRatio(excel, 1);
+		
 		List<String> groupNames = groupDao.getGroupNames();
 		
 		for (String name :  groupNames){
