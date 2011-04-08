@@ -16,6 +16,8 @@ public class OrderLayout extends VerticalLayout {
 	
 	public OrderLayout(List<User> userList, List<Order> orderList){
 	
+		String[] colums = {"Nom","Prenom","Email","Titre du manuelle","Auteur","ISBN","Commander","Arriver","Enlever","Indisponible"};
+		
 		setSpacing(false);
 		
 		for(User user  : userList){
@@ -27,6 +29,7 @@ public class OrderLayout extends VerticalLayout {
 			Label email = new Label(user.getEmail());
 			
 			HorizontalLayout userLayout = new HorizontalLayout();
+			userLayout.setSizeFull();
 			
 			userLayout.addComponent(cell(lastName));
 			userLayout.addComponent(cell(firstName));
@@ -43,15 +46,15 @@ public class OrderLayout extends VerticalLayout {
 					Label author = new Label(order.getAuthor());
 					Label isbn = new Label(String.valueOf(order.getIsbn()));
 					
-					CheckBox succeed = new CheckBox("Arriver");
-					CheckBox inalienable = new CheckBox("Indisponible");
-					CheckBox ordered = new CheckBox("Commander");
-					CheckBox taken = new CheckBox("Enlever");
+					CheckBox succeed = new CheckBox();
+					CheckBox inalienable = new CheckBox();
+					CheckBox ordered = new CheckBox();
+					CheckBox taken = new CheckBox();
 					
 					HorizontalLayout horizontalOrederLayout = new HorizontalLayout();
 					
 					horizontalOrederLayout.setSpacing(false);
-					horizontalOrederLayout.setHeight("35px");
+				
 					
 					lineOfOrder++;
 					
@@ -67,7 +70,7 @@ public class OrderLayout extends VerticalLayout {
 				}
 			}
 			
-			userLayout.setHeight(String.valueOf(lineOfOrder*25)+"px");
+
 			
 			HorizontalLayout line = new HorizontalLayout();
 			line.addComponent(userLayout);
@@ -78,7 +81,7 @@ public class OrderLayout extends VerticalLayout {
 	
 	public VerticalLayout cell(Component component){
 		VerticalLayout cell = new VerticalLayout();
-		cell.setHeight("100%");
+		cell.setSizeFull();
 		cell.setStyleName("tableLines");
 		cell.addComponent(component);
 		cell.setComponentAlignment(component, Alignment.MIDDLE_CENTER);
