@@ -18,6 +18,8 @@ background-color : #D3D3D3;
  background: #A9A9A9;
 } */
 
+
+
 .padding{
     padding-top:15px;   /* Not too close from the header */
 	padding-bottom:20px; /* Not too close from the footer */
@@ -65,5 +67,10 @@ background-color : #D3D3D3;
 
 .menu{background-color: #d0e2ec;}
 
+.tableLines{
+border-style:solid;
+border-width:2px;
+border-color:#F0F8FF;
+}
 
 /* END OF COPY/PASTE */
