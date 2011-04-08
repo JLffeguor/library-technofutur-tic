@@ -18,6 +18,10 @@ public class Order {
 	private String author;
 	private Long isbn;
 	private int price;
+	private boolean ordered;
+	private boolean taken;
+	private boolean inalienable;
+	private boolean succeed;
 
 	@OneToOne
 	@JoinColumn(name = "user_id")
@@ -78,10 +82,37 @@ public class Order {
 	public long getId() {
 		return id;
 	}
-	
-	
-	
-	
-	
+
+	public boolean isOrdered() {
+		return ordered;
+	}
+
+	public void setOrdered(boolean ordered) {
+		this.ordered = ordered;
+	}
+
+	public boolean isTaken() {
+		return taken;
+	}
+
+	public void setTaken(boolean taken) {
+		this.taken = taken;
+	}
+
+	public boolean isInalienable() {
+		return inalienable;
+	}
+
+	public void setInalienable(boolean inalienable) {
+		this.inalienable = inalienable;
+	}
+
+	public boolean isSucceed() {
+		return succeed;
+	}
+
+	public void setSucceed(boolean succeed) {
+		this.succeed = succeed;
+	}
 
 }
