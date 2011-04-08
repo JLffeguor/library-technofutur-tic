@@ -1,5 +1,6 @@
 package library.ui.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import library.dao.GroupDao;
@@ -7,15 +8,14 @@ import library.dao.OrderDao;
 import library.dao.UserDao;
 import library.domain.Order;
 import library.domain.User;
+import library.jxel.xlsGenerator.XlsGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 
@@ -25,6 +25,10 @@ public class OrderManagementButtonListenerLogic{
 	@Autowired GroupDao groupDao;
 	@Autowired OrderDao orderDao;
 	@Autowired UserDao userDao;
+	@Autowired XlsGenerator xlsGenerator;
+	
+	private  List<Order> orderList;
+	private  List<User> userList;
 	
 	public void execute(final VerticalLayout dynamicLayout){		
 		
@@ -52,8 +56,8 @@ public class OrderManagementButtonListenerLogic{
 					
 					
 					String groupName = event.getButton().getCaption();
-					List<Order> orderList = orderDao.getOrderByGroupName(groupName);
-					List<User> userList = userDao.getUsersByGroupName(groupName);
+					orderList = orderDao.getOrderByGroupName(groupName);
+					userList = userDao.getUsersByGroupName(groupName);
 					
 					
 					OrderLayout orderLayout = new OrderLayout(userList, orderList);
@@ -66,5 +70,30 @@ public class OrderManagementButtonListenerLogic{
 				}
 			});
 		}
+		
+		excel.addListener(new Button.ClickListener() {
+			
+			public void buttonClick(ClickEvent event) {
+				
+				List<String> temp = new ArrayList<String>();
+				
+				for(User user : userList){
+					for(Order order : orderList){
+						if(order.getUser().getId().equals(user.getId())){
+							temp.add(user.getLastName());
+							temp.add(user.getFirstName());
+							temp.add(user.getEmail());
+							
+							temp.add(order.getBook_title());
+							temp.add(order.getAuthor());
+							temp.add(String.valueOf(order.getIsbn()));
+							temp.add(String.valueOf(order.getPrice()));
+						}
+					}
+				}
+				
+				xlsGenerator.exportListToXls(temp, 7);
+			}
+		});
 	}
 }
