@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import library.domain.Group;
+import library.domain.Order;
+import library.domain.User;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,11 @@ public class GroupDao {
 	public List<Group> getGroupByName(String name){
 		return em.createQuery("select g from Group g where g.name = :name").setParameter("name", name).getResultList();
 	}
+	
+	public List<String> getGroupNames(){
+		return em.createQuery("select g.name from Group g").getResultList();
+	}
+	
 	public void createGroup(Group group){
 		em.persist(group);
 	}
@@ -32,7 +39,6 @@ public class GroupDao {
 	
 	public void setCode(Group group){
 		em.createQuery("update Group g set g.code  = :code  where g.id = :id").setParameter("code", group.getCode()).setParameter("id", group.getId()).executeUpdate();
-	}
-	
-	
+	}	
+
 }
