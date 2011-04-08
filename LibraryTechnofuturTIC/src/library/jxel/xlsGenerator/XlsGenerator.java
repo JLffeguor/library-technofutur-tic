@@ -32,17 +32,17 @@ public class XlsGenerator {
 			sheet.setColumnView(0, 80);
 			WritableFont arial14font = new WritableFont(WritableFont.ARIAL, 14);
 			WritableFont columnfont = new WritableFont(WritableFont.ARIAL, 20, WritableFont.BOLD);
-			
+
 			WritableCellFormat arial14format = new WritableCellFormat(arial14font);
 			WritableCellFormat columnformat = new WritableCellFormat(columnfont);
-			
+
 			arial14format.setWrap(true);
-			
+
 			Label columntitle = new Label (0,0,"Title",columnformat);
 			Label columnAuthor = new Label (1,0,"Author",columnformat);
 			sheet.addCell(columntitle);
 			sheet.addCell(columnAuthor);
-			
+
 			int i = 1;
 			for(Book b : books){
 				Label titleLabel = new Label(0,i,b.getTitle(),arial14format);
@@ -71,15 +71,25 @@ public class XlsGenerator {
 			WritableFont arial14font = new WritableFont(WritableFont.ARIAL, 14);
 			WritableCellFormat arial14format = new WritableCellFormat(arial14font);
 			arial14format.setWrap(true);
-			sheet.setColumnView(1 , 50);
-			int y = 0;
-			for (String s : listS) {
-				for (int x = 0; x < rowLength; x++) {
-					Label label = new Label(x, y, s, arial14format);
-					sheet.addCell(label);
+			//			sheet.setColumnView(1 , 50);
+
+			int row = 0;
+			int column = 0;
+			for (String data : listS) {
+
+				Label label = new Label(column, row, data, arial14format);
+				sheet.addCell(label);
+				
+				column++;	
+				if(column > 6){	
+					column=0;
+					row++;
 				}
-				y++;
+			
+				
 			}
+
+
 			workbook.write();
 			workbook.close();
 		} catch (IOException e) {
