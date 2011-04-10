@@ -43,8 +43,9 @@ background-color : #D3D3D3;
       margin-bottom: 5px;
 }
 .toolbar .v-button span {
-      font-size: x-small;
+      font-size: 12px;
       text-shadow: #fafafa 1px 1px 0;
+      font-weight:bold;
 }
 .toolbar .v-button .v-button-wrap, 
 .toolbar .v-disabled.v-button .v-button-wrap {
@@ -72,5 +73,28 @@ border-style:solid;
 border-width:2px;
 border-color:#F0F8FF;
 }
+/* .v-table-header-cell {
+font-weight:bold;
+font-size:16px;
+text-align: center;
+
+} */
+
+.v-table-cell-content-blue {
+    background: #B0C4DE;
+    color: black;
+    border-right: solid;
+    border-right-width: 1px;
+    border-right-color: #808080;
+}
+
+.v-table-cell-content-white {
+    background: white;
+    color: black;
+    border-right: solid;
+    border-right-width: 1px;
+    border-right-color: #808080;
+}
+
 
 /* END OF COPY/PASTE */
