@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -17,10 +21,9 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import library.dao.BookDao;
 import library.domain.Book;
-import library.jxel.xlsGenerator.XlsGenerator;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import library.domain.Group;
+import library.domain.Order;
+import library.domain.User;
 
 public class Main {
 
@@ -29,8 +32,55 @@ public class Main {
 	 */
 	public static void main(String[] args){
 		
-		ApplicationContext applicationContext=new ClassPathXmlApplicationContext("applicationContext.xml");
-		BookDao bookDao=(BookDao)applicationContext.getBean("bookDao");
+		
+//		ApplicationContext applicationContext=new ClassPathXmlApplicationContext("applicationContext.xml");
+//		BookDao bookDao = (BookDao)applicationContext.getBean("bookDao");
+//		GroupDao groupDao = (GroupDao)applicationContext.getBean("groupDao");
+//		UserDao userDao = (UserDao)applicationContext.getBean("userDao");
+//		OrderDao orderDao = (OrderDao)applicationContext.getBean("orderDao");
+		
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("library");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		
+		for(int i=0;i<10;i++){
+			Group g = new Group();
+			g.setClosed(false);
+			g.setName("group "+String.valueOf(i));
+			g.setCreationDate("88/88/88");
+			g.setCreationDate("99/99/99");
+			em.persist(g);
+			
+			for(int j=0;j<12;j++){
+				User u = new User();
+				u.setEmail("email");
+				u.setFirstName("faton");
+				u.setLastName("alia");
+				u.setGroup(g);
+				em.persist(u);
+				
+				for(int h=0;h<2;h++){
+					Order order = new Order();
+					order.setAuthor("john rizzo");
+					order.setTaken(false);
+					order.setSucceed(false);
+					order.setInalienable(false);
+					order.setBook_title("book title");
+					order.setIsbn(new Long(j));
+					order.setOrdered(false);
+					order.setUser(u);
+					order.setGroup(g);
+					em.persist(order);
+				}
+				
+			}
+		}
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+		
+		
 		
 //		GroupService groupService =(GroupService)applicationContext.getBean("groupService");
 		
@@ -58,8 +108,8 @@ public class Main {
 //			}
 //		}
 //		extractDataFromXlsFile(bookDao);
-		XlsGenerator xlsGenerator = new XlsGenerator();
-		xlsGenerator.exportAllBooks(bookDao);
+//		XlsGenerator xlsGenerator = new XlsGenerator();
+//		xlsGenerator.exportAllBooks(bookDao);
 //		create50Book(bookDao);
 		
 	}

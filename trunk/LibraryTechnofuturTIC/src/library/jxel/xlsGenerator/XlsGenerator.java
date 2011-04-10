@@ -1,14 +1,14 @@
 package library.jxel.xlsGenerator;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import jxl.Workbook;
-import jxl.format.Alignment;
 import jxl.write.Label;
-import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
@@ -62,10 +62,13 @@ public class XlsGenerator {
 		}
 	}
 
-	public void exportListToXls(List<String> listS, int rowLength) {
+	public ByteArrayOutputStream exportListToXls(List<String> listS, int rowLength) {
+		
+		ByteArrayOutputStream baots = new ByteArrayOutputStream();
+		
 		WritableWorkbook workbook;
 		try {
-			workbook = Workbook.createWorkbook(new File("list.xls"));
+			workbook = Workbook.createWorkbook(baots);
 
 			WritableSheet sheet = workbook.createSheet("Feuille 1", 0);
 			WritableFont arial14font = new WritableFont(WritableFont.ARIAL, 14);
@@ -89,9 +92,12 @@ public class XlsGenerator {
 				
 			}
 
-
 			workbook.write();
 			workbook.close();
+			
+			return baots;
+			
+			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (RowsExceededException e) {

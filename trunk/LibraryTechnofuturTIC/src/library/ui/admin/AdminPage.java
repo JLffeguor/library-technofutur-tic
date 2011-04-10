@@ -23,8 +23,8 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 	private final VerticalLayout dynamicLayout = new VerticalLayout();
 
 
-	@Autowired  OrderManagementButtonListenerLogic orderManagementService;
-	@Autowired  GroupManagementButtonListenerLogic groupManagementService;
+	@Autowired  OrderManagementButtonListenerLogic orderManagementButtonListenerLogic;
+	@Autowired  LibraryManagementButtonListenerLogic libraryManagementButtonListenerLogic;
 
 	public AdminPage(){
 
@@ -68,15 +68,14 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 		dynamicLayout.removeAllComponents();
 
 		if(button.equals(libraryManagement)){
-
+			libraryManagementButtonListenerLogic.execute(dynamicLayout);
 		}
 
 		if(button.equals(orderManagement)){
-			orderManagementService.execute(dynamicLayout);
+			orderManagementButtonListenerLogic.execute(dynamicLayout);
 		}
 
 		if(button.equals(groupManagement)){
-//			groupManagementService.execute(dynamicLayout);
 		}
 	}
 
