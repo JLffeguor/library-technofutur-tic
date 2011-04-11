@@ -26,7 +26,6 @@ import com.vaadin.ui.Window;
 public class LibraryManagementButtonListenerLogic {
 
 	@Autowired	BookDao bookDao;
-
 	
 	public void execute(final VerticalLayout dynamicLayout){
 		Button createBook = new Button("Créer un livre");
@@ -71,9 +70,10 @@ public class LibraryManagementButtonListenerLogic {
 		final TextField author = new TextField("Auteur");
 		final TextField isbn = new TextField("ISBN");
 
-		final Button save = new Button("Valider");
+		final Button saveCreate = new Button("Valider");
+		final Button saveModify = new Button("Valider");
 		
-		save.addListener(new Button.ClickListener() {
+		saveCreate.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
 				Book book = new Book();
@@ -81,17 +81,28 @@ public class LibraryManagementButtonListenerLogic {
 				book.setAuthor((String)author.getValue());
 				book.setIsbn((String)isbn.getValue());
 				
-//				bookDao.addBook(book);
-				
-		Item i = table.getItem(table.getValue());
-		i.getItemProperty("title").setValue((String)title.getValue());
-		i.getItemProperty("author").setValue((String)author.getValue());
-		i.getItemProperty("isbn").setValue((String)isbn.getValue());
-				
-		bookDao.updateBook(book);
-//				table.addItem(book);
+				bookDao.addBook(book);
+				table.addItem(book);
 				
 				
+				
+			}
+		});
+		
+		saveModify.addListener(new Button.ClickListener() {
+
+			public void buttonClick(ClickEvent event) {
+				Book book = new Book();
+				book.setTitle((String)title.getValue());
+				book.setAuthor((String)author.getValue());
+				book.setIsbn((String)isbn.getValue());
+				
+				Item i = table.getItem(table.getValue());
+				i.getItemProperty("title").setValue((String)title.getValue());
+				i.getItemProperty("author").setValue((String)author.getValue());
+				i.getItemProperty("isbn").setValue((String)isbn.getValue());
+						
+				bookDao.updateBook(book);
 				
 			}
 		});
@@ -105,7 +116,7 @@ public class LibraryManagementButtonListenerLogic {
 				fieldValidateLayout.addComponent(title);
 				fieldValidateLayout.addComponent(author);
 				fieldValidateLayout.addComponent(isbn);
-				fieldValidateLayout.addComponent(save);
+				fieldValidateLayout.addComponent(saveCreate);
 				
 			}
 		});
@@ -132,7 +143,7 @@ public class LibraryManagementButtonListenerLogic {
 					fieldValidateLayout.addComponent(title);
 					fieldValidateLayout.addComponent(author);
 					fieldValidateLayout.addComponent(isbn);
-					fieldValidateLayout.addComponent(save);
+					fieldValidateLayout.addComponent(saveModify);
 					
 
 				}
@@ -171,6 +182,18 @@ public class LibraryManagementButtonListenerLogic {
 			}
 
 		});
+		
+		
+//		table.setCellStyleGenerator(new Table.CellStyleGenerator() {
+//		    public String getStyle(Object itemId, Object propertyId) {
+//		       int row = ((Integer)itemId).intValue();
+//		       
+//		       if((row % 2) == 0){
+//		    	   return "white";
+//		       }else return "blue";
+//
+//		    }
+//		});
 
 
 	}
