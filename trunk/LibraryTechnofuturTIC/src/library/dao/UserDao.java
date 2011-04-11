@@ -20,4 +20,8 @@ public class UserDao {
 		return em.createQuery("select u from User u where u.group.name = :name").setParameter("name", name).getResultList();
 	}
 	
+	public void deleteUsers(List<User> userList){
+		em.createQuery("delete from User u where u in (:userList)").setParameter("userList", userList).executeUpdate();
+	}
+	
 }
