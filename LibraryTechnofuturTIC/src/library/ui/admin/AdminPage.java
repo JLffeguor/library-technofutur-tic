@@ -25,6 +25,7 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 
 	@Autowired  OrderManagementButtonListenerLogic orderManagementButtonListenerLogic;
 	@Autowired  LibraryManagementButtonListenerLogic libraryManagementButtonListenerLogic;
+	@Autowired  GroupManagementButtonListenerLogic groupManagementButtonListenerLogic;
 
 	public AdminPage(){
 
@@ -76,6 +77,7 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 		}
 
 		if(button.equals(groupManagement)){
+			groupManagementButtonListenerLogic.execute(dynamicLayout);
 		}
 	}
 

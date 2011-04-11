@@ -1,8 +1,9 @@
 package library.ui.admin;
 
-import library.dao.BookDao;
-import library.domain.Book;
+import library.dao.GroupDao;
+import library.domain.Group;
 import library.navigator7.MyApplication;
+import library.service.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,36 +21,37 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @Service
-public class LibraryManagementButtonListenerLogic {
-
-	@Autowired	BookDao bookDao;
+public class GroupManagementButtonListenerLogic {
+	@Autowired	GroupDao groupDao;
+	@Autowired	GroupService groupService;
 
 	public void execute(final VerticalLayout dynamicLayout){
-		Button createBook = new Button("Créer un livre");
-		createBook.addStyleName("big");
-		Button deletBook = new Button("Supprimer un livre");
-		deletBook.addStyleName("big");
-		Button modifyBook = new Button("Modifier un Livre");
-		modifyBook.addStyleName("big");
+		Button createGroup = new Button("Créer un group");
+		createGroup.addStyleName("big");
+		Button deletGroup = new Button("Supprimer un group");
+		deletGroup.addStyleName("big");
+		Button modifyGroup = new Button("Modifier un group");
+		modifyGroup.addStyleName("big");
+
 
 		HorizontalLayout buttonsLayout = new HorizontalLayout();
 		buttonsLayout.setSpacing(true);
 
-		buttonsLayout.addComponent(createBook);
-		buttonsLayout.addComponent(deletBook);
-		buttonsLayout.addComponent(modifyBook);
+		buttonsLayout.addComponent(createGroup);
+		buttonsLayout.addComponent(deletGroup);
+		buttonsLayout.addComponent(modifyGroup);
 
 		final Table table  = new Table();
 		table.addStyleName("big strong");
 		table.setSelectable(true);
 		table.setImmediate(true);
 
-		final BeanItemContainer<Book> bic = new BeanItemContainer<Book>(Book.class, bookDao.getBooks());
+		BeanItemContainer<Group> bic = new BeanItemContainer<Group>(Group.class, groupDao.getGroups());
 
 
 		table.setContainerDataSource(bic);
-		table.setVisibleColumns(new Object[]{"title", "author", "isbn"});
-		table.setColumnHeaders(new String[]{"Titre du manuel", "Auteur", "ISBN"});
+		table.setVisibleColumns(new Object[]{"name", "creationDate", "closingDate"});
+		table.setColumnHeaders(new String[]{"NOM DU GROUP", "DATE DE CREATION", "DATE DE CLOTURE"});
 
 
 		VerticalLayout tableButtonLayout = new VerticalLayout();
@@ -66,25 +68,25 @@ public class LibraryManagementButtonListenerLogic {
 		dynamicLayout.addComponent(fieldValidateLayout);
 		dynamicLayout.setExpandRatio(fieldValidateLayout, 1);
 
-		final TextField title = new TextField("Titre du manuel");
-		final TextField author = new TextField("Auteur");
-		final TextField isbn = new TextField("ISBN");
+		final TextField name = new TextField("Nom du Group");
+		final TextField creationDate = new TextField("Date de creation");
+		final TextField closingDate = new TextField("Date de cloture");
 
 		final Button saveCreate = new Button("Valider");
-		saveCreate.addStyleName("big");
+		saveCreate.addStyleName("big");;
 		final Button saveModify = new Button("Valider");
 		saveModify.addStyleName("big");
 
 		saveCreate.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
-				Book book = new Book();
-				book.setTitle((String)title.getValue());
-				book.setAuthor((String)author.getValue());
-				book.setIsbn((String)isbn.getValue());
+				Group group = new Group();
+				group.setName((String)name.getValue());
+				group.setCreationDate((String)creationDate.getValue());
+				group.setClosingDate((String)closingDate.getValue());
 
-				bookDao.addBook(book);
-				table.addItem(book);
+				groupDao.createGroup(group);
+				table.addItem(group);
 
 
 
@@ -94,40 +96,40 @@ public class LibraryManagementButtonListenerLogic {
 		saveModify.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
-				Book book = new Book();
-				book.setTitle((String)title.getValue());
-				book.setAuthor((String)author.getValue());
-				book.setIsbn((String)isbn.getValue());
+				Group group = new Group();
+				group.setName((String)name.getValue());
+				group.setCreationDate((String)creationDate.getValue());
+				group.setClosingDate((String)closingDate.getValue());
 
 				Item i = table.getItem(table.getValue());
-				i.getItemProperty("title").setValue((String)title.getValue());
-				i.getItemProperty("author").setValue((String)author.getValue());
-				i.getItemProperty("isbn").setValue((String)isbn.getValue());
+				i.getItemProperty("name").setValue((String)name.getValue());
+				i.getItemProperty("creationDate").setValue((String)creationDate.getValue());
+				i.getItemProperty("closingDate").setValue((String)closingDate.getValue());
 
-				bookDao.updateBook(book);
+				groupDao.updateGroup(group);
 
 			}
 		});
 
-		createBook.addListener(new Button.ClickListener() {
+		createGroup.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
 
 				fieldValidateLayout.removeAllComponents();
 
-				title.setValue("");
-				author.setValue("");
-				isbn.setValue("");
+				name.setValue("");
+				creationDate.setValue("");
+				closingDate.setValue("");
 
-				fieldValidateLayout.addComponent(title);
-				fieldValidateLayout.addComponent(author);
-				fieldValidateLayout.addComponent(isbn);
+				fieldValidateLayout.addComponent(name);
+				fieldValidateLayout.addComponent(creationDate);
+				fieldValidateLayout.addComponent(closingDate);
 				fieldValidateLayout.addComponent(saveCreate);
 
 			}
 		});
 
-		modifyBook.addListener(new Button.ClickListener() {
+		modifyGroup.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
 
@@ -138,17 +140,17 @@ public class LibraryManagementButtonListenerLogic {
 					myApp.getMainWindow().showNotification("Vous devez selectionner un element dans la table");
 				}else{
 
-					Book book = (Book)table.getValue();
+					Group group = (Group)table.getValue();
 
-					title.setValue(book.getTitle());
-					author.setValue(book.getAuthor());
-					isbn.setValue(book.getIsbn());
+					name.setValue(group.getName());
+					creationDate.setValue(group.getCreationDate());
+					closingDate.setValue(group.getClosingDate());
 
 					fieldValidateLayout.removeAllComponents();
 
-					fieldValidateLayout.addComponent(title);
-					fieldValidateLayout.addComponent(author);
-					fieldValidateLayout.addComponent(isbn);
+					fieldValidateLayout.addComponent(name);
+					fieldValidateLayout.addComponent(creationDate);
+					fieldValidateLayout.addComponent(closingDate);
 					fieldValidateLayout.addComponent(saveModify);
 
 
@@ -158,17 +160,17 @@ public class LibraryManagementButtonListenerLogic {
 			}
 		});
 
-		deletBook.addListener(new Button.ClickListener() {
+		deletGroup.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
 
 				fieldValidateLayout.removeAllComponents();
 
-				final Book b = (Book)table.getValue();
+				final Group g = (Group)table.getValue();
 				final Application myApp = (MyApplication)NavigableApplication.getCurrent();
 
-				if(b!=null){
-
+				if(g!=null){
+					
 					final Window window = new Window();
 
 					window.center();
@@ -183,11 +185,14 @@ public class LibraryManagementButtonListenerLogic {
 
 						public void buttonClick(ClickEvent event) {
 							myApp.getMainWindow().removeWindow(window);
-							bookDao.deleteBookById(b.getId());
-							table.removeItem(b);
+
+							groupService.deleteGroup(g);
+							table.removeItem(g);
 
 						}
 					});
+
+
 				}else{
 					myApp.getMainWindow().showNotification("Vous devez selectioner un element dans le tableau");
 				}
@@ -195,17 +200,8 @@ public class LibraryManagementButtonListenerLogic {
 
 		});
 
-		table.setCellStyleGenerator(new Table.CellStyleGenerator() {
-		    public String getStyle(Object itemId, Object propertyId) {
-		       
-		       return "blue";
-
-		    }
-		});
 
 
 
 	}
 }
-
-

@@ -33,12 +33,15 @@ public class GroupDao {
 	public void createGroup(Group group){
 		em.persist(group);
 	}
-	public void removeGroup(long id){
+	public void deleteGroup(Long id){
 		em.createQuery("delete from Group g where g.id =:id").setParameter("id", id).executeUpdate();
 	}
 	
 	public void setCode(Group group){
 		em.createQuery("update Group g set g.code  = :code  where g.id = :id").setParameter("code", group.getCode()).setParameter("id", group.getId()).executeUpdate();
 	}	
+	public void updateGroup(Group group){
+		em.merge(group);
+	}
 
 }
