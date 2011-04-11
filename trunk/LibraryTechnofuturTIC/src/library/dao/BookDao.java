@@ -24,6 +24,10 @@ public class BookDao {
 		em.createQuery("delete from Book b where b.id =:id").setParameter("id", id).executeUpdate();
 	}
 	public void updateBook(Book book){
+		Book b = em.find(Book.class, book.getId());
+		b.setTitle(book.getTitle());
+		b.setAuthor(book.getAuthor());
+		b.setIsbn(book.getIsbn());
 		em.merge(book);
 	}
 	public List<Book> searchBookByTitle(String title){

@@ -24,4 +24,15 @@ public class UserDao {
 		em.createQuery("delete from User u where u in (:userList)").setParameter("userList", userList).executeUpdate();
 	}
 	
+	public void addUser(User user){
+		em.persist(user);
+	}
+	
+	public List<User> getUserByFirstNameAndCode(String firstName, String code){
+		return em	.createQuery("select u from User u where u.firstname = :firstname and u.group.code = :code")
+					.setParameter("firstname", firstName)
+					.setParameter("code", code)
+					.getResultList();
+	}
+	
 }

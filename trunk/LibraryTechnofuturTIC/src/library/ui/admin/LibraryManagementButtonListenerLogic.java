@@ -94,16 +94,15 @@ public class LibraryManagementButtonListenerLogic {
 		saveModify.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
-				Book book = new Book();
-				book.setTitle((String)title.getValue());
-				book.setAuthor((String)author.getValue());
-				book.setIsbn((String)isbn.getValue());
+				
 
 				Item i = table.getItem(table.getValue());
 				i.getItemProperty("title").setValue((String)title.getValue());
 				i.getItemProperty("author").setValue((String)author.getValue());
 				i.getItemProperty("isbn").setValue((String)isbn.getValue());
 
+				Book book = (Book)table.getValue();
+				
 				bookDao.updateBook(book);
 
 			}

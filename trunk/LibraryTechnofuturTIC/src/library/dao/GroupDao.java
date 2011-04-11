@@ -40,8 +40,17 @@ public class GroupDao {
 	public void setCode(Group group){
 		em.createQuery("update Group g set g.code  = :code  where g.id = :id").setParameter("code", group.getCode()).setParameter("id", group.getId()).executeUpdate();
 	}	
-	public void updateGroup(Group group){
-		em.merge(group);
+	
+	public void upDateGroup(Group group){
+		Group g = em.find(Group.class, group.getId());
+		g.setName(group.getName());
+		g.setCreationDate(group.getCreationDate());
+		g.setClosingDate(group.getClosingDate());
+		em.merge(g);
+	}
+	
+	public List<Group> getGroupByCode(String code){
+		return em.createQuery("select g from Group g where g.code = :code").setParameter("code", code).getResultList();
 	}
 
 }
