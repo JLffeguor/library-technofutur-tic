@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import library.dao.BookDao;
 import library.dao.GroupDao;
 import library.dao.OrderDao;
 import library.dao.UserDao;
 import library.domain.Book;
+import library.domain.Group;
 import library.domain.Order;
 import library.domain.User;
 import library.navigator7.MyApplication;
@@ -21,6 +23,7 @@ import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.Page;
 
 import com.vaadin.Application;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -31,7 +34,6 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 @Page
 @Configurable(preConstruction = true)
@@ -77,17 +79,8 @@ public class UserPage extends HorizontalLayout{
 			
 		});
 		
-		Button signIn = new Button("Enregistrer");
-		signIn.addStyleName("link");
-		signIn.addListener(new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				Application myApp = (MyApplication)NavigableApplication.getCurrent();
-				myApp.getMainWindow().addWindow(signInWidow());
-			}
-		});
 		
 		form.addComponent(enter);
-		form.addComponent(signIn);
 		
 		addComponent(form);
 		setComponentAlignment(form, Alignment.MIDDLE_CENTER);
@@ -97,16 +90,28 @@ public class UserPage extends HorizontalLayout{
 
 	public VerticalLayout selectStudentLayout(String groupCode){
 		VerticalLayout selectStudentLayout = new VerticalLayout();
+		final Map<Integer,User> listUserMap = new HashMap<Integer, User>();
 		List<User> userList = new ArrayList<User>();
-		userList = userDao.getUsersByGroupName(groupCode);
-		final ListSelect userSelect = new ListSelect("Veuillez Selectionner votre nom dans la liste. Puis cliquer sur OK", userList);
+		Group group = (Group) groupDao.getGroupByCode(groupCode);
+		userList = userDao.getUsersByGroupName(group.getName());
+		final ListSelect userSelect = new ListSelect("Veuillez Selectionner votre nom dans la liste. Puis cliquer sur OK");
+		userSelect.setNullSelectionAllowed(false); 
+		userSelect.setImmediate(true);
+		
+		Integer i = 0;
+		for(User user:userList){
+			userSelect.setItemCaption(i, user.getFirstName() + " " + user.getLastName());
+			listUserMap.put(i, user);
+			i++;
+		}
 		selectStudentLayout.addComponent(userSelect);
 		
 		Button validateUser = new Button("OK");
 		validateUser.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
+				if (!userSelect.isNullSelectionAllowed()){
 				removeAllComponents();
-				Label userLabel = new Label((String) userSelect.getValue());
+				Label userLabel = new Label((Property) listUserMap.get(userSelect.getValue()));
 				//this layout contains the form to command a book, and the libraries
 				VerticalLayout commandLayout = new VerticalLayout();
 				commandLayout.setSpacing(true);
@@ -115,53 +120,17 @@ public class UserPage extends HorizontalLayout{
 				commandLayout.addComponent(searchBookInLabraryLayout());
 				
 				addComponent(commandLayout);
+				}else{
+					Application myApp = (MyApplication)NavigableApplication.getCurrent();
+					myApp.getMainWindow().showNotification("Vous devez selectionner votre nom dans la liste pui scliquer sur \"OK\"");
+				}
 			}
 		});
 		return selectStudentLayout;
 		
 	}
 	
-	public Window signInWidow(){
-		final Window window = new Window();
-		window.center();
-		window.setHeight("300px");
-		window.setWidth("250px");
-		
-		final VerticalLayout form = new VerticalLayout();
-		form.setSpacing(true);
-		
-		final TextField lastName = new TextField("Nom");
-		final TextField firstName = new TextField("Prenom");
-		final TextField email = new TextField("Email");
-		final TextField code = new TextField("Code");
-		
-		form.addComponent(lastName);
-		form.addComponent(firstName);
-		form.addComponent(email);
-		form.addComponent(code);
-		
-		Button button = new Button("Valider");
-		form.addComponent(button);
-
-		button.addListener(new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				User user = new User();
-				user.setLastName((String) lastName.getValue());
-				user.setFirstName((String) firstName.getValue());
-				user.setEmail((String) email.getValue());
-				user.setGroup(groupDao.getGroupByCode((String) code.getValue())
-						.get(0));
-				userDao.addUser(user);
-				Application myApp = (MyApplication) NavigableApplication
-						.getCurrent();
-				myApp.getMainWindow().removeWindow(window);
-			}
-		});
-		
-		window.setContent(form);
-		
-		return window;
-	}
+	
 	//The user know what book he will, thus he can fill in
 	public VerticalLayout commandNewBookLayout(){
 		
