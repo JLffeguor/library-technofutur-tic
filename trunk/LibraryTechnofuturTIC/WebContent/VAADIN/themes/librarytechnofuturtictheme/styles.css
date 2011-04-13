@@ -1,13 +1,12 @@
-@import "../myTheme/styles.css";        /* for 'extend' vaadin themes.*/
+@import "../myTheme/styles.css"; /* for 'extend' vaadin themes.*/
 /***************************************************** For the PageTemplate classes of Navigator7 addon. 
   COPY/PASTE THIS in your styles.css */
 
 /****** I've been forced to require you to copy/paste stuff from this CSS file, because Vaadin 6.3 API prevents us to provide a value for the style attbitute of tags.
   Vote for this to change the situation :    http://vaadin.uservoice.com/forums/20474-general/suggestions/699562
-  */ 
-  
+  */
 .PageTemplate-mainLayout {
-    width:100%
+	width: 100%
 }
 /* 
 .v-tabsheet-tabs {
@@ -17,61 +16,64 @@ background-color : #D3D3D3;
 .v-tabsheet-tabitem-selected {
  background: #A9A9A9;
 } */
-
-
-
-.padding{
-    padding-top:15px;   /* Not too close from the header */
-	padding-bottom:20px; /* Not too close from the footer */
+.padding {
+	padding-top: 15px; /* Not too close from the header */
+	padding-bottom: 20px; /* Not too close from the footer */
 }
 
 .toolbar {
-      background: #ccc url(images/gradient.png) repeat-x bottom left;
+	background: #ccc url(images/gradient.png) repeat-x bottom left;
 }
+
 .toolbar .v-button {
-      display: block;
-      height: 75px;
-      background: transparent;
-      border: none;
-      text-align: center;
+	display: block;
+	height: 75px;
+	background: transparent;
+	border: none;
+	text-align: center;
 }
- 
+
 .toolbar .v-button img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 5px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
 }
+
 .toolbar .v-button span {
-      font-size: 15px;
-      text-shadow: #fafafa 1px 1px 0;
-      font-weight:bold;
-}
-.toolbar .v-button .v-button-wrap, 
-.toolbar .v-disabled.v-button .v-button-wrap {
-   background: transparent;
-   border: none;
-   -webkit-border-radius: 0;
-   -moz-border-radius: 0;
-   border-radius: 0;
-   -webkit-box-shadow: none;
-   -moz-box-shadow: none;
-   box-shadow: none;
-}
-.toolbar .v-button:active .v-button-wrap,
-.toolbar .v-button.v-pressed .v-button-wrap {
-   background: transparent;
-   -webkit-box-shadow: none;
-   -moz-box-shadow: none;
-   box-shadow: none;
+	font-size: 15px;
+	text-shadow: #fafafa 1px 1px 0;
+	font-weight: bold;
 }
 
-.menu{background-color: #d0e2ec;}
+.toolbar .v-button .v-button-wrap,.toolbar .v-disabled.v-button .v-button-wrap
+	{
+	background: transparent;
+	border: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
 
-.tableLines{
-border-style:solid;
-border-width:2px;
-border-color:#F0F8FF;
+.toolbar .v-button:active .v-button-wrap,.toolbar .v-button.v-pressed .v-button-wrap
+	{
+	background: transparent;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.menu {
+	background-color: #d0e2ec;
+}
+
+.tableLines {
+	border-style: solid;
+	border-width: 2px;
+	border-color: #F0F8FF;
 }
 /* .v-table-header-cell {
 font-weight:bold;
@@ -79,22 +81,24 @@ font-size:16px;
 text-align: center;
 
 } */
-
 .v-table-cell-content-blue {
-    background: #B0C4DE;
-    color: black;
-    border-right: solid;
-    border-right-width: 1px;
-    border-right-color: #808080;
+	background: #B0C4DE;
+	color: black;
+	border-right: solid;
+	border-right-width: 1px;
+	border-right-color: #808080;
 }
 
 .v-table-cell-content-white {
-    background: white;
-    color: black;
-    border-right: solid;
-    border-right-width: 1px;
-    border-right-color: #808080;
+	background: white;
+	color: black;
+	border-right: solid;
+	border-right-width: 1px;
+	border-right-color: #808080;
 }
 
+.v-textfield-align-right {
+	text-align: right;
+}
 
 /* END OF COPY/PASTE */
