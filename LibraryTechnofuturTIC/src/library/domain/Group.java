@@ -21,7 +21,7 @@ public class Group {
 	private String creationDate;
 	@Column (name = "closingdate")
 	private String  closingDate;
-	@Column(name = "closed")
+	@Column(name = "closed", nullable=true)
 	private boolean closed;//all book have been received and distributed
 	@Column(name = "code")
 	private String code;//code generated each time a group is created;
