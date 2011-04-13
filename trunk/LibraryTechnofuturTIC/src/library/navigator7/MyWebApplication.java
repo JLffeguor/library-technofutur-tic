@@ -11,7 +11,7 @@ public class MyWebApplication extends WebApplication{
 	 public MyWebApplication() {
 	        registerPages(new Class[] {
 	        		AdminPage.class,
-//	        		UserPage.class,
+	        		UserPage.class,
 	        });
 	    }
 }
