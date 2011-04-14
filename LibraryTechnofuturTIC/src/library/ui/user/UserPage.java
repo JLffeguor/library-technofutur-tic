@@ -49,9 +49,10 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	@Autowired GroupDao groupDao;
 	@Autowired UserDao userDao;
 	@Autowired UserService userService;
+	@Autowired ShoppingCart shoppingCart;
 	
 	final ListSelect userSelect = new ListSelect();
-
+	final VerticalLayout cartAndHelpLayout = new VerticalLayout();
 	
 
 	
@@ -61,7 +62,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		
 	
 		//this Layout contains the shopping cart o the user and all the book choose by the members of his group
-		final VerticalLayout cartAndHelpLayout = new VerticalLayout();
+		
 		final VerticalLayout form = new VerticalLayout();
 
 		
@@ -141,7 +142,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 						enterEmail.center();
 						enterEmail.setResizable(false);
 						enterEmail.setHeight("50px");
-						enterEmail.setWidth("250px");
+						enterEmail.setWidth("450px");
 						
 						final TextField email = new TextField("Entrer votre adresse email");
 						Button validateEmail = new Button("Enregistrer email et continuer");
@@ -227,12 +228,15 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		Button addToCart = new Button("J'ajoute le livre a mon panier");
 		addToCart.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
+				cartAndHelpLayout.removeAllComponents();
 				Order order= new Order();
-				order.setAuthor(infoBooks.get("Auteur").getCaption());
-				order.setBook_title(infoBooks.get("Titre").getCaption());
-				order.setIsbn(Long.parseLong(infoBooks.get("ISBN").getCaption()));
-				order.setPrice(Integer.parseInt(infoBooks.get("Prix").getCaption()));
-				
+				order.setAuthor((String)infoBooks.get("Auteur").getValue());
+				order.setBook_title((String)infoBooks.get("Titre").getValue());
+				order.setIsbn((String)infoBooks.get("ISBN").getValue());
+				order.setPrice(Integer.parseInt((String)infoBooks.get("Prix").getValue()));
+				shoppingCart.addOrder(order);
+				cartAndHelpLayout.addComponent(shoppingCart.execute());
+				addComponent(cartAndHelpLayout);
 			}
 		});
 		newBookLayout.addComponent(addToCart);

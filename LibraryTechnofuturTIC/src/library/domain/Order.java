@@ -16,7 +16,7 @@ public class Order {
 	private long id;
 	private String book_title;
 	private String author;
-	private Long isbn;
+	private String isbn;
 	private int price;
 	private boolean ordered;
 	private boolean taken;
@@ -47,11 +47,11 @@ public class Order {
 		this.author = author;
 	}
 
-	public Long getIsbn() {
+	public String getIsbn() {
 		return isbn;
 	}
 
-	public void setIsbn(Long isbn) {
+	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
 

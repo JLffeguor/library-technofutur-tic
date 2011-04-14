@@ -97,8 +97,17 @@ text-align: center;
 	border-right-color: #808080;
 }
 
-.v-textfield-align-right {
+.v-label-align-right {
 	text-align: right;
 }
-
+.v-layout-colorfont{
+	background-color:#F7F2B2;	
+}
+.right-labeltoright
+{
+position:absolute;
+right:0px;
+width:300px;
+background-color:#b0e0e6;
+}
 /* END OF COPY/PASTE */
