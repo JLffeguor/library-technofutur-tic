@@ -36,12 +36,16 @@ public class UserDao {
 					.getResultList();
 	}
 	public void updateUser(User user){
-		User u = em.find(User.class, user.getId());
-		u.setFirstName(user.getFirstName());
-		u.setLastName(user.getLastName());
-		u.setEmail(user.getEmail());
-		u.setGroup(user.getGroup());
-		em.merge(u);
+//		User u = em.find(User.class, user.getId());
+//		if(user.getFirstName()!=null)
+//			u.setFirstName(user.getFirstName());
+//		if(user.getLastName()!=null)
+//			u.setLastName(user.getLastName());
+//		if(user.getEmail()!=null)
+//			u.setEmail(user.getEmail());
+//		if(user.getGroup()!=null)
+//			u.setGroup(user.getGroup());
+		em.merge(user);
 	}
 	
 }

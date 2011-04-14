@@ -26,11 +26,8 @@ public class Group {
 	@Column(name = "code")
 	private String code;//code generated each time a group is created;
 	@Column(name = "students")
-	private int students;
-	@Column(name = "file")
-	private boolean file;
-	
-	
+	private Integer students;
+
 	public boolean isClosed() {
 		return closed;
 	}
@@ -64,16 +61,10 @@ public class Group {
 	public long getId() {
 		return id;
 	}
-	public int getStudents() {
+	public Integer getStudents() {
 		return students;
 	}
-	public void setStudents(int students) {
+	public void setStudents(Integer students) {
 		this.students = students;
-	}
-	public boolean isFile() {
-		return file;
-	}
-	public void setFile(boolean file) {
-		this.file = file;
 	}
 }

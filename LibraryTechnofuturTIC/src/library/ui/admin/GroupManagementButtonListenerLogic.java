@@ -2,6 +2,7 @@ package library.ui.admin;
 
 import java.util.List;
 
+import library.admin.service.TableUtilities;
 import library.dao.GroupDao;
 import library.dao.UserDao;
 import library.domain.Group;
@@ -14,20 +15,13 @@ import org.springframework.stereotype.Service;
 import org.vaadin.navigator7.NavigableApplication;
 
 import com.vaadin.Application;
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.IntegerValidator;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -40,6 +34,19 @@ public class GroupManagementButtonListenerLogic {
 	@Autowired	GroupDao groupDao;
 	@Autowired	GroupService groupService;
 	@Autowired  UserDao userDao;
+
+	final Table tableUser;
+
+	public GroupManagementButtonListenerLogic(){
+
+		tableUser = TableUtilities.createUserTable();
+
+		tableUser.addStyleName("big strong");
+		tableUser.setSelectable(true);
+		tableUser.setImmediate(true);
+
+	}
+
 
 	public void execute(final VerticalLayout dynamicLayout){
 
@@ -137,18 +144,21 @@ public class GroupManagementButtonListenerLogic {
 					String std = (String)students.getValue();
 					Integer i = Integer.valueOf(std);
 
+					group.setStudents(i);
+
 					List<Group> gL = groupDao.getGroupByName(group.getName());
 					if(gL.size()==0){
 						groupDao.createGroup(group);
+						tableGroup.addItem(group);
+
+						codeGroup.setValue("code : "+groupService.generatedCode(group));
+
+						formVerticalLayout.removeAllComponents();
+
 					}else{
 						Application myApp = (MyApplication)NavigableApplication.getCurrent();
 						myApp.getMainWindow().showNotification("Ce nom du groupe existe dèjà");
 					}
-
-					tableGroup.addItem(group);
-
-					codeGroup.setValue("code : "+groupService.generatedCode(group));
-
 				}else{
 					Application myApp = (MyApplication)NavigableApplication.getCurrent();
 					myApp.getMainWindow().showNotification("Veulliez entrer le nombre d'étudiants");
@@ -165,12 +175,18 @@ public class GroupManagementButtonListenerLogic {
 				i.getItemProperty("name").setValue((String)name.getValue());
 				i.getItemProperty("creationDate").setValue((String)creationDate.getValue());
 				i.getItemProperty("closingDate").setValue((String)closingDate.getValue());
-				i.getItemProperty("students").setValue((Integer)students.getValue());
+				i.getItemProperty("students").setValue(Integer.valueOf((String)students.getValue()));
 
 				Group g = (Group)tableGroup.getValue();
 
 				groupDao.upDateGroup(g);
 
+				//update userTalbe
+				fillUserTable(g);
+				rightSide.removeAllComponents();
+				rightSide.addComponent(tableUser);
+
+				formVerticalLayout.removeAllComponents();
 
 			}
 		});
@@ -276,9 +292,10 @@ public class GroupManagementButtonListenerLogic {
 							groupService.deleteGroup(g);
 							tableGroup.removeItem(g);
 
+							rightSide.removeAllComponents();
+
 						}
 					});
-
 
 				}else{
 					myApp.getMainWindow().showNotification("Vous devez selectioner un element dans le tableau");
@@ -296,67 +313,149 @@ public class GroupManagementButtonListenerLogic {
 		//RighSide////RighSide////RighSide////RighSide////RighSide////RighSide//
 		////////////////////////////////////////////////////////////////////////
 
-		final Table tableUser  = new Table();
-		tableUser.addStyleName("big strong");
-		tableUser.setSelectable(true);
-		tableUser.setEditable(true);
-		tableUser.setImmediate(true);
-		
-		tableUser.setTableFieldFactory(new ImmediateFieldFactory());
-
-
-
 		tableGroup.addListener(new ValueChangeListener() {
 
 			public void valueChange(ValueChangeEvent event) {
 				Group g = (Group)tableGroup.getValue();
-				tableUser.setPageLength(g.getStudents());
 
-				List<User> userList = userDao.getUsersByGroupName(g.getName());
+				if(g!=null){
 
-				while(userList.size()<g.getStudents()){
-					User u = new User();
-					u.setEmail("");
-					u.setFirstName("");
-					u.setLastName("");
+					fillUserTable(g);
 
-					userList.add(u);
+					rightSide.removeAllComponents();
+					rightSide.addComponent(tableUser);
 				}
-
-				BeanItemContainer<User> bicu = new BeanItemContainer<User>(User.class, userList);
-						
-				tableUser.setContainerDataSource(bicu);
-						
-				
-				tableUser.setVisibleColumns(new Object[]{"lastName", "firstName", "email"});
-				tableUser.setColumnHeaders(new String[]{"NOM", "PRENOM", "EMAIL"});
-
-				rightSide.removeAllComponents();
-				rightSide.addComponent(tableUser);			
 
 			}
 
 		});	
 
 	}
-	
-	public class ImmediateFieldFactory extends DefaultFieldFactory {
-	    public Field createField(Container container,
-	                             Object itemId,
-	                             Object propertyId,
-	                             Component uiContext) {
-	        // Let the DefaultFieldFactory create the fields...
-	        Field field = super.createField(container, itemId,
-	                                        propertyId, uiContext);
-	        
-	        // ...and just set them as immediate.
-	        ((AbstractField)field).setImmediate(true);
-	      
-	        
-	        
-	        
-	        return field;
-	    }
+
+	public void fillUserTable(Group g){
+
+		tableUser.removeAllItems();
+
+		tableUser.setPageLength(g.getStudents());
+
+		List<User> userList = userDao.getUsersByGroupName(g.getName());
+
+
+		int i = 0;
+
+		while(i<g.getStudents()){
+
+
+			CustomTextField firstName = new CustomTextField();
+			CustomTextField lastName = new CustomTextField();
+			CustomTextField email = new CustomTextField();
+
+//			UserEntryListener uE = new UserEntryListener(firstName, lastName, email, g);
+//
+//			firstName.addListener(uE);
+//			lastName.addListener(uE);
+//			email.addListener(uE);
+
+			if(userList.size()>i){				
+				firstName.setValue(userList.get(i).getFirstName());
+				lastName.setValue(userList.get(i).getLastName());
+				email.setValue(userList.get(i).getEmail());
+			}
+
+			tableUser.addItem(new Object[] {lastName, firstName, email}, new Integer(i));
+
+			i++;
+
+		}
+
 	}
 
+	public class UserEntryListener implements ValueChangeListener{
+
+		final CustomTextField firstName;
+		final CustomTextField lastName;
+		final CustomTextField email;
+		final Group group;
+
+		public UserEntryListener(final CustomTextField fN, final CustomTextField lN, final CustomTextField eM, final Group g){
+
+			this.firstName = fN;
+			this.lastName = lN;
+			this.email = eM;
+			this.group = g;
+
+			firstName.setPreviousValue((String)firstName.getValue());
+			lastName.setPreviousValue((String)lastName.getValue());
+			email.setPreviousValue((String)email.getValue());
+
+		}
+
+		public void valueChange(ValueChangeEvent event) {
+
+			String fN = (String)firstName.getValue();
+			String lN = (String)lastName.getValue();
+
+			if((!"".equals(fN)&&(!"".equals(lN)))){
+
+				List<User> uLPr = userDao.getUserByFirstNameAndLastName(firstName.getPreviousValue(), lastName.getPreviousValue());
+				List<User>	uLCr = userDao.getUserByFirstNameAndLastName((String)firstName.getValue(), (String)lastName.getValue());
+
+				if((firstName.getPreviousValue().isEmpty())&&(lastName.getPreviousValue().isEmpty())){
+
+					if((uLPr.size()==0)&&(uLCr.size()==0)){
+
+						User u = new User();
+						u.setFirstName(fN);
+						u.setLastName(lN);
+						u.setGroup(group);
+
+						userDao.addUser(u);
+						
+						firstName.setPreviousValue((String)firstName.getValue());
+						lastName.setPreviousValue((String)lastName.getValue());
+						email.setPreviousValue((String)email.getValue());
+
+					}else if((uLPr.size()!=0)){
+						User u = uLPr.get(0);
+						u.setFirstName(fN);
+						u.setLastName(lN);
+
+						userDao.updateUser(u);
+						
+						firstName.setPreviousValue(fN);
+						lastName.setPreviousValue(lN);
+						email.setPreviousValue((String)email.getValue());
+						
+					}else if((uLCr.size()!=0)){
+
+						firstName.setValue("");
+						lastName.setValue("");
+						Application myApp = (MyApplication)NavigableApplication.getCurrent();
+						myApp.getMainWindow().showNotification("Cet étudiant est déja dans la table");
+
+					}
+				}
+			}
+		}
+	}
+	
+	public class CustomTextField extends TextField{
+
+		private String previousValue;
+
+		public CustomTextField(){
+			super();
+			setImmediate(true);
+		}
+
+		public String getPreviousValue(){
+			return this.previousValue;
+		}
+
+		public void setPreviousValue(String previousValue){
+			this.previousValue = previousValue;
+		}
+
+	}
+	
 }
