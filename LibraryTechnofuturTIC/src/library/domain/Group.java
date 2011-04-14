@@ -25,6 +25,10 @@ public class Group {
 	private boolean closed;//all book have been received and distributed
 	@Column(name = "code")
 	private String code;//code generated each time a group is created;
+	@Column(name = "students")
+	private String students;
+	@Column(name = "file")
+	private boolean file;
 	
 	
 	public boolean isClosed() {
@@ -59,5 +63,17 @@ public class Group {
 	}
 	public long getId() {
 		return id;
+	}
+	public String getStudents() {
+		return students;
+	}
+	public void setStudents(String students) {
+		this.students = students;
+	}
+	public boolean isFile() {
+		return file;
+	}
+	public void setFile(boolean file) {
+		this.file = file;
 	}
 }
