@@ -21,7 +21,7 @@ public class UserService {
 	
 	public boolean checkIfUserRegistered(String firstName, String code){
 		
-		List<User> user = dao.getUserByFirstNameAndCode(firstName, code);
+		List<User> user = dao.getUserByFirstNameAndLastName(firstName, code);
 		
 		if(user.size()==0){
 			Application myApp = (MyApplication)NavigableApplication.getCurrent();

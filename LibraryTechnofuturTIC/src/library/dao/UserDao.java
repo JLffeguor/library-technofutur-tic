@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import library.domain.Group;
 import library.domain.Order;
 import library.domain.User;
 
@@ -28,11 +29,19 @@ public class UserDao {
 		em.persist(user);
 	}
 	
-	public List<User> getUserByFirstNameAndCode(String firstName, String code){
-		return em	.createQuery("select u from User u where u.firstname = :firstname and u.group.code = :code")
-					.setParameter("firstname", firstName)
-					.setParameter("code", code)
+	public List<User> getUserByFirstNameAndLastName(String firstname, String lastname){
+		return em	.createQuery("select u from User u where u.firstName = :firstname and u.lastName = :lastname")
+					.setParameter("firstname", firstname)
+					.setParameter("lastname", lastname )
 					.getResultList();
+	}
+	public void updateUser(User user){
+		User u = em.find(User.class, user.getId());
+		u.setFirstName(user.getFirstName());
+		u.setLastName(user.getLastName());
+		u.setEmail(user.getEmail());
+		u.setGroup(user.getGroup());
+		em.merge(u);
 	}
 	
 }
