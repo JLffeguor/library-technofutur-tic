@@ -79,9 +79,17 @@ public class GroupManagementButtonListenerLogic {
 		final TextField name = new TextField("Nom du Group");
 		final TextField creationDate = new TextField("Date de creation");
 		final TextField closingDate = new TextField("Date de cloture");
+		
+		HorizontalLayout addStudents = new HorizontalLayout();
+		final Button studentsToAdd = new Button("Ajouter/Supprimer des étudiants");
+		
 		final TextField students = new TextField("Nombre d'étudiants");
 		students.addValidator(new IntegerValidator("Vous devez mettre un nombre"));
 		students.setImmediate(true);
+		
+		addStudents.addComponent(students);
+		addStudents.addComponent(studentsToAdd);
+		
 		final Label codeGroup = new Label();
 		
 		
