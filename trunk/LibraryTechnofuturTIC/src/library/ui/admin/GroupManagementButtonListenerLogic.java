@@ -1,6 +1,7 @@
 package library.ui.admin;
 
 import java.sql.BatchUpdateException;
+import java.util.List;
 
 import library.dao.GroupDao;
 import library.domain.Group;
@@ -44,23 +45,25 @@ public class GroupManagementButtonListenerLogic {
 		buttonsLayout.addComponent(deletGroup);
 		buttonsLayout.addComponent(modifyGroup);
 
-		final Table table  = new Table();
-		table.addStyleName("big strong");
-		table.setSelectable(true);
-		table.setImmediate(true);
+		
+		
+		final Table tableGroup  = new Table();
+		tableGroup.addStyleName("big strong");
+		tableGroup.setSelectable(true);
+		tableGroup.setImmediate(true);
 
 		BeanItemContainer<Group> bic = new BeanItemContainer<Group>(Group.class, groupDao.getGroups());
 
 
-		table.setContainerDataSource(bic);
-		table.setVisibleColumns(new Object[]{"name", "creationDate", "closingDate"});
-		table.setColumnHeaders(new String[]{"NOM DU GROUP", "DATE DE CREATION", "DATE DE CLOTURE"});
+		tableGroup.setContainerDataSource(bic);
+		tableGroup.setVisibleColumns(new Object[]{"name", "creationDate", "closingDate"});
+		tableGroup.setColumnHeaders(new String[]{"NOM DU GROUP", "DATE DE CREATION", "DATE DE CLOTURE"});
 
 
 		VerticalLayout tableButtonLayout = new VerticalLayout();
 		tableButtonLayout.setSpacing(true);
 
-		tableButtonLayout.addComponent(table);
+		tableButtonLayout.addComponent(tableGroup);
 		tableButtonLayout.addComponent(buttonsLayout);
 
 		dynamicLayout.addComponent(tableButtonLayout);
@@ -79,7 +82,7 @@ public class GroupManagementButtonListenerLogic {
 		
 
 		final Button saveCreate = new Button("Valider");
-		saveCreate.addStyleName("big");;
+		saveCreate.addStyleName("big");
 		final Button saveModify = new Button("Valider");
 		saveModify.addStyleName("big");
 
@@ -91,11 +94,18 @@ public class GroupManagementButtonListenerLogic {
 				group.setCreationDate((String)creationDate.getValue());
 				group.setClosingDate((String)closingDate.getValue());
 
-				groupDao.createGroup(group);
+				List<Group> gL = groupDao.getGroupByName(group.getName());
+				if(gL.size()==0){
+					groupDao.createGroup(group);
+				}else{
+					Application myApp = (MyApplication)NavigableApplication.getCurrent();
+					myApp.getMainWindow().showNotification("Ce nom du groupe existe dèjà");
+				}
 				
 				
 				
-				table.addItem(group);
+				
+				tableGroup.addItem(group);
 				
 //				codeGroup.setValue("code : "+groupService.generatedCode(group));
 
@@ -106,12 +116,12 @@ public class GroupManagementButtonListenerLogic {
 
 			public void buttonClick(ClickEvent event) {
 				
-				Item i = table.getItem(table.getValue());
+				Item i = tableGroup.getItem(tableGroup.getValue());
 				i.getItemProperty("name").setValue((String)name.getValue());
 				i.getItemProperty("creationDate").setValue((String)creationDate.getValue());
 				i.getItemProperty("closingDate").setValue((String)closingDate.getValue());
 				
-				Group g = (Group)table.getValue();
+				Group g = (Group)tableGroup.getValue();
 				
 				groupDao.upDateGroup(g);
 				
@@ -145,14 +155,14 @@ public class GroupManagementButtonListenerLogic {
 
 			public void buttonClick(ClickEvent event) {
 
-				Item item = table.getItem(table.getValue());
+				Item item = tableGroup.getItem(tableGroup.getValue());
 
 				if(item == null){
 					Application myApp = (MyApplication)NavigableApplication.getCurrent();
 					myApp.getMainWindow().showNotification("Vous devez selectionner un element dans la table");
 				}else{
 
-					Group group = (Group)table.getValue();
+					Group group = (Group)tableGroup.getValue();
 
 					name.setValue(group.getName());
 					creationDate.setValue(group.getCreationDate());
@@ -178,7 +188,7 @@ public class GroupManagementButtonListenerLogic {
 
 				fieldValidateLayout.removeAllComponents();
 
-				final Group g = (Group)table.getValue();
+				final Group g = (Group)tableGroup.getValue();
 				final Application myApp = (MyApplication)NavigableApplication.getCurrent();
 
 				if(g!=null){
@@ -199,7 +209,7 @@ public class GroupManagementButtonListenerLogic {
 							myApp.getMainWindow().removeWindow(window);
 
 							groupService.deleteGroup(g);
-							table.removeItem(g);
+							tableGroup.removeItem(g);
 
 						}
 					});
