@@ -25,15 +25,30 @@ public class LibraryManagementButtonListenerLogic {
 	@Autowired	BookDao bookDao;
 
 	public void execute(final VerticalLayout dynamicLayout){
+		
+		HorizontalLayout mainLayout = new HorizontalLayout();
+		mainLayout.setSpacing(true);
+		
+		VerticalLayout leftSide = new VerticalLayout();
+		leftSide.setSpacing(true);
+		
+		final VerticalLayout rightSide = new VerticalLayout();
+		rightSide.setSpacing(true);
+		
+		HorizontalLayout buttonsLayout = new HorizontalLayout();
+		buttonsLayout.setSpacing(true);
+		
+		mainLayout.addComponent(leftSide);
+		mainLayout.addComponent(rightSide);
+		
+		dynamicLayout.addComponent(mainLayout);
+		
 		Button createBook = new Button("Créer un livre");
 		createBook.addStyleName("big");
 		Button deletBook = new Button("Supprimer un livre");
 		deletBook.addStyleName("big");
 		Button modifyBook = new Button("Modifier un Livre");
 		modifyBook.addStyleName("big");
-
-		HorizontalLayout buttonsLayout = new HorizontalLayout();
-		buttonsLayout.setSpacing(true);
 
 		buttonsLayout.addComponent(createBook);
 		buttonsLayout.addComponent(deletBook);
@@ -46,25 +61,12 @@ public class LibraryManagementButtonListenerLogic {
 
 		final BeanItemContainer<Book> bic = new BeanItemContainer<Book>(Book.class, bookDao.getBooks());
 
-
 		table.setContainerDataSource(bic);
 		table.setVisibleColumns(new Object[]{"title", "author", "isbn"});
 		table.setColumnHeaders(new String[]{"Titre du manuel", "Auteur", "ISBN"});
 
-
-		VerticalLayout tableButtonLayout = new VerticalLayout();
-		tableButtonLayout.setSpacing(true);
-
-		tableButtonLayout.addComponent(table);
-		tableButtonLayout.addComponent(buttonsLayout);
-
-		dynamicLayout.addComponent(tableButtonLayout);
-
-		final VerticalLayout fieldValidateLayout = new VerticalLayout();
-		fieldValidateLayout.setSpacing(true);
-
-		dynamicLayout.addComponent(fieldValidateLayout);
-		dynamicLayout.setExpandRatio(fieldValidateLayout, 1);
+		leftSide.addComponent(table);
+		leftSide.addComponent(buttonsLayout);
 
 		final TextField title = new TextField("Titre du manuel");
 		final TextField author = new TextField("Auteur");
@@ -74,6 +76,8 @@ public class LibraryManagementButtonListenerLogic {
 		saveCreate.addStyleName("big");
 		final Button saveModify = new Button("Valider");
 		saveModify.addStyleName("big");
+		final Button cancle = new Button("Annuler");
+		cancle.addStyleName("big");
 
 		saveCreate.addListener(new Button.ClickListener() {
 
@@ -85,8 +89,6 @@ public class LibraryManagementButtonListenerLogic {
 
 				bookDao.addBook(book);
 				table.addItem(book);
-
-
 
 			}
 		});
@@ -107,21 +109,33 @@ public class LibraryManagementButtonListenerLogic {
 
 			}
 		});
+		
+		cancle.addListener(new Button.ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				rightSide.removeAllComponents();
+			}
+		});
 
 		createBook.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
 
-				fieldValidateLayout.removeAllComponents();
+				rightSide.removeAllComponents();
 
 				title.setValue("");
 				author.setValue("");
 				isbn.setValue("");
 
-				fieldValidateLayout.addComponent(title);
-				fieldValidateLayout.addComponent(author);
-				fieldValidateLayout.addComponent(isbn);
-				fieldValidateLayout.addComponent(saveCreate);
+				rightSide.addComponent(title);
+				rightSide.addComponent(author);
+				rightSide.addComponent(isbn);
+				
+				HorizontalLayout createAndCancleHorizontalLayout = new HorizontalLayout();
+				createAndCancleHorizontalLayout.setSpacing(true);
+				createAndCancleHorizontalLayout.addComponent(saveCreate);
+				createAndCancleHorizontalLayout.addComponent(cancle);
+				
+				rightSide.addComponent(createAndCancleHorizontalLayout);
 
 			}
 		});
@@ -143,17 +157,20 @@ public class LibraryManagementButtonListenerLogic {
 					author.setValue(book.getAuthor());
 					isbn.setValue(book.getIsbn());
 
-					fieldValidateLayout.removeAllComponents();
+					rightSide.removeAllComponents();
 
-					fieldValidateLayout.addComponent(title);
-					fieldValidateLayout.addComponent(author);
-					fieldValidateLayout.addComponent(isbn);
-					fieldValidateLayout.addComponent(saveModify);
-
+					rightSide.addComponent(title);
+					rightSide.addComponent(author);
+					rightSide.addComponent(isbn);
+					
+					HorizontalLayout createAndModifyHorizontalLayout = new HorizontalLayout();
+					createAndModifyHorizontalLayout.setSpacing(true);
+					createAndModifyHorizontalLayout.addComponent(saveModify);
+					createAndModifyHorizontalLayout.addComponent(cancle);
+					
+					rightSide.addComponent(createAndModifyHorizontalLayout);
 
 				}
-
-
 			}
 		});
 
@@ -161,7 +178,7 @@ public class LibraryManagementButtonListenerLogic {
 
 			public void buttonClick(ClickEvent event) {
 
-				fieldValidateLayout.removeAllComponents();
+				rightSide.removeAllComponents();
 
 				final Book b = (Book)table.getValue();
 				final Application myApp = (MyApplication)NavigableApplication.getCurrent();
@@ -184,7 +201,6 @@ public class LibraryManagementButtonListenerLogic {
 							myApp.getMainWindow().removeWindow(window);
 							bookDao.deleteBookById(b.getId());
 							table.removeItem(b);
-
 						}
 					});
 				}else{
@@ -194,15 +210,13 @@ public class LibraryManagementButtonListenerLogic {
 
 		});
 
-		table.setCellStyleGenerator(new Table.CellStyleGenerator() {
-		    public String getStyle(Object itemId, Object propertyId) {
-		       
-		       return "blue";
-
-		    }
-		});
-
-
+//		table.setCellStyleGenerator(new Table.CellStyleGenerator() {
+//		    public String getStyle(Object itemId, Object propertyId) {
+//		       
+//		       return "blue";
+//
+//		    }
+//		});
 
 	}
 }

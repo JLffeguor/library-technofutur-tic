@@ -47,8 +47,6 @@ public class GroupService {
 			begin = 10000L+id;
 		}
 
-
-
 		String code = (String.valueOf(begin));
 		group.setCode(code);
 		groupDao.setCode(group);
