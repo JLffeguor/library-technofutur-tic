@@ -17,7 +17,7 @@ import com.vaadin.ui.Button.ClickEvent;
 public class ShoppingCart extends VerticalLayout{
 
 	private List<Order> orders = new ArrayList<Order>();
-	int sum = 0;
+	
 	
 	public List<Order> getOrders() {
 		return orders;
@@ -28,12 +28,12 @@ public class ShoppingCart extends VerticalLayout{
 	}
 	
 	public VerticalLayout execute(){
-
-		VerticalLayout shoppingCartLayout = new VerticalLayout();
+		removeAllComponents();
+		final VerticalLayout shoppingCartLayout = new VerticalLayout();
 		shoppingCartLayout.removeAllComponents();
 		shoppingCartLayout.setSpacing(true);
 		shoppingCartLayout.addStyleName("colorfont");
-		
+		int sum = 0;
 		
 		for(Order o:orders){
 			final HorizontalLayout orderLayout = new HorizontalLayout();
@@ -51,13 +51,11 @@ public class ShoppingCart extends VerticalLayout{
 			shoppingCartLayout.addComponent(orderLayout);
 			
 			deleteButton.addListener(new Button.ClickListener() {
-				
 				public void buttonClick(ClickEvent event) {
 					VerticalLayout v  = (VerticalLayout)orderLayout.getParent();
 					int i = v.getComponentIndex(orderLayout);
 					v.removeComponent(orderLayout);
 					orders.remove(i);
-					sum=0;
 					execute();
 				}
 			});
