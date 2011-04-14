@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import javax.swing.event.ChangeEvent;
 
 import library.dao.BookDao;
 import library.dao.GroupDao;
@@ -23,7 +24,9 @@ import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.Page;
 
 import com.vaadin.Application;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -34,11 +37,12 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 @Page
 @Configurable(preConstruction = true)
 
-public class UserPage extends HorizontalLayout{
+public class UserPage extends HorizontalLayout implements Property.ValueChangeListener{
 	
 	@Autowired OrderDao orderDao;
 	@Autowired BookDao bookDao;
@@ -46,8 +50,10 @@ public class UserPage extends HorizontalLayout{
 	@Autowired UserDao userDao;
 	@Autowired UserService userService;
 	
+	final ListSelect userSelect = new ListSelect();
+
 	
-	
+
 	
 	public UserPage(){
 		
@@ -56,9 +62,9 @@ public class UserPage extends HorizontalLayout{
 	
 		//this Layout contains the shopping cart o the user and all the book choose by the members of his group
 		final VerticalLayout cartAndHelpLayout = new VerticalLayout();
-		
-
 		final VerticalLayout form = new VerticalLayout();
+
+		
 		form.setSpacing(true);
 		
 		final TextField groupCode = new TextField("Code");
@@ -67,16 +73,26 @@ public class UserPage extends HorizontalLayout{
 		Button enter = new Button("Connecter");
 		
 		enter.addListener(new Button.ClickListener() {
-			
+
 			public void buttonClick(ClickEvent event) {
-//				boolean verify = userService.checkIfUserRegistered((String)firstName.getValue(),(String)code.getValue());
-//				if(verify){
-//				}
-				removeAllComponents();
-				
-				addComponent(selectStudentLayout(groupCode.getCaption()));
+				// boolean verify =
+				// userService.checkIfUserRegistered((String)firstName.getValue(),(String)code.getValue());
+				// if(verify){
+
+				List<Group> listGroup = new ArrayList<Group>();
+				listGroup = groupDao.getGroupByCode((String)groupCode.getValue());
+				if (listGroup.isEmpty()) {
+					Application myApp = (MyApplication) NavigableApplication.getCurrent();
+					myApp.getMainWindow().showNotification("Aucun groupe n'a ce code. Ré-essaier");
+					removeAllComponents();
+					addComponent(form);
+
+				} else {
+					addComponent(selectStudentLayout((String)groupCode.getValue()));
+				}
+
 			}
-			
+
 		});
 		
 		
@@ -89,48 +105,103 @@ public class UserPage extends HorizontalLayout{
 
 
 	public VerticalLayout selectStudentLayout(String groupCode){
-		VerticalLayout selectStudentLayout = new VerticalLayout();
-		final Map<Integer,User> listUserMap = new HashMap<Integer, User>();
+		removeAllComponents();
+		final VerticalLayout selectStudentLayout = new VerticalLayout();
 		List<User> userList = new ArrayList<User>();
-		Group group = (Group) groupDao.getGroupByCode(groupCode);
-		userList = userDao.getUsersByGroupName(group.getName());
-		final ListSelect userSelect = new ListSelect("Veuillez Selectionner votre nom dans la liste. Puis cliquer sur OK");
-		userSelect.setNullSelectionAllowed(false); 
-		userSelect.setImmediate(true);
+		List<Group> groups = new ArrayList<Group>();
+		List<String> nameList = new ArrayList<String>();
 		
-		Integer i = 0;
-		for(User user:userList){
-			userSelect.setItemCaption(i, user.getFirstName() + " " + user.getLastName());
-			listUserMap.put(i, user);
-			i++;
+		groups = groupDao.getGroupByCode(groupCode);//We find the groupName
+		userList = userDao.getUsersByGroupName(groups.get(0).getName());//we find all user in the group
+	
+		for(User u:userList){
+			nameList.add(u.getFirstName() + " " + u.getLastName()); //create the list with only FirstName and LastName
 		}
-		selectStudentLayout.addComponent(userSelect);
+		userSelect.setCaption("Selectionner votre nom dans la liste. Puis cliquer sur OK");
+		userSelect.setContainerDataSource(new BeanItemContainer<String>(String.class, nameList));
+		
+		userSelect.setNullSelectionAllowed(false); // user can not 'unselect'
+		userSelect.setImmediate(true); // send the change to the server at once
+
 		
 		Button validateUser = new Button("OK");
 		validateUser.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				if (!userSelect.isNullSelectionAllowed()){
 				removeAllComponents();
-				Label userLabel = new Label((Property) listUserMap.get(userSelect.getValue()));
-				//this layout contains the form to command a book, and the libraries
-				VerticalLayout commandLayout = new VerticalLayout();
-				commandLayout.setSpacing(true);
-				
-				commandLayout.addComponent(commandNewBookLayout());
-				commandLayout.addComponent(searchBookInLabraryLayout());
-				
-				addComponent(commandLayout);
+				final Application myApp = (MyApplication) NavigableApplication
+						.getCurrent();
+				if (!userSelect.isNullSelectionAllowed()) {
+					String lastNameAndFirstName = (String) userSelect.getValue();
+					final String firstName = lastNameAndFirstName.substring(0,lastNameAndFirstName.indexOf(" "));
+					final String lastName = lastNameAndFirstName.substring(lastNameAndFirstName.indexOf(" ") + 1);
+					System.out.println(lastName + ":" + firstName);
+
+					if (userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0).getEmail() == null) {
+						final Window enterEmail = new Window();
+						enterEmail.center();
+						enterEmail.setResizable(false);
+						enterEmail.setHeight("50px");
+						enterEmail.setWidth("250px");
+						
+						final TextField email = new TextField("Entrer votre adresse email");
+						Button validateEmail = new Button("Enregistrer email et continuer");
+						enterEmail.addComponent(email);
+						enterEmail.addComponent(validateEmail);
+
+						validateEmail.addListener(new Button.ClickListener() {
+							public void buttonClick(ClickEvent event) {
+								if (!email.isNullSettingAllowed()) {
+									User user = userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0);
+									user.setEmail((String) email.getValue());
+									userDao.updateUser(user);
+									myApp.getMainWindow().removeWindow(enterEmail);
+									removeAllComponents();
+									commandLayout(userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0));
+								} else {
+									myApp.getMainWindow().showNotification("Voud devez entrer votre adresse mail");
+									removeAllComponents();
+									myApp.getMainWindow().addWindow(enterEmail);
+								}
+									
+							}
+						});
+						myApp.getMainWindow().addWindow(enterEmail);
+						
+					} else {
+						
+						commandLayout(userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0));
+						
+					}
 				}else{
-					Application myApp = (MyApplication)NavigableApplication.getCurrent();
-					myApp.getMainWindow().showNotification("Vous devez selectionner votre nom dans la liste pui scliquer sur \"OK\"");
+					
+					myApp.getMainWindow().showNotification("Vous devez selectionner votre nom dans la liste puis cliquer sur \"OK\"");
+					removeAllComponents();
+					addComponent(selectStudentLayout);
 				}
+				
 			}
 		});
+		selectStudentLayout.addComponent(userSelect);
+		selectStudentLayout.addComponent(validateUser);
+
 		return selectStudentLayout;
-		
+
 	}
-	
-	
+	public void commandLayout(User user){
+		removeAllComponents();
+		Label nameLabel = new Label(user.getFirstName() + " " + user.getLastName() + ": " + user.getEmail());
+
+		VerticalLayout commandLayout = new VerticalLayout();
+		commandLayout.addComponent(nameLabel);
+		commandLayout.setSpacing(true);
+
+		commandLayout.addComponent(commandNewBookLayout());
+		commandLayout.addComponent(searchBookInLabraryLayout());
+
+		addComponent(commandLayout);
+	}
+
+
 	//The user know what book he will, thus he can fill in
 	public VerticalLayout commandNewBookLayout(){
 		
@@ -223,4 +294,14 @@ public class UserPage extends HorizontalLayout{
 		
 		return shoppingCart;
 	}
+
+
+
+	public void valueChange(ValueChangeEvent event) {
+		String name =  (String)userSelect.getValue();
+	}
+
+
+
+	
 }
