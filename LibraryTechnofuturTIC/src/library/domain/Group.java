@@ -26,7 +26,7 @@ public class Group {
 	@Column(name = "code")
 	private String code;//code generated each time a group is created;
 	@Column(name = "students")
-	private String students;
+	private int students;
 	@Column(name = "file")
 	private boolean file;
 	
@@ -64,10 +64,10 @@ public class Group {
 	public long getId() {
 		return id;
 	}
-	public String getStudents() {
+	public int getStudents() {
 		return students;
 	}
-	public void setStudents(String students) {
+	public void setStudents(int students) {
 		this.students = students;
 	}
 	public boolean isFile() {

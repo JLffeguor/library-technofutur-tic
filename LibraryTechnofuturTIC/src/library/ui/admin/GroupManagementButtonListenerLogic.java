@@ -15,6 +15,8 @@ import org.vaadin.navigator7.NavigableApplication;
 import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.IntegerValidator;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -77,6 +79,9 @@ public class GroupManagementButtonListenerLogic {
 		final TextField name = new TextField("Nom du Group");
 		final TextField creationDate = new TextField("Date de creation");
 		final TextField closingDate = new TextField("Date de cloture");
+		final TextField students = new TextField("Nombre d'étudiants");
+		students.addValidator(new IntegerValidator("Vous devez mettre un nombre"));
+		students.setImmediate(true);
 		final Label codeGroup = new Label();
 		
 		
@@ -89,10 +94,19 @@ public class GroupManagementButtonListenerLogic {
 		saveCreate.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
+				
+				if(students.isValid()){
+				
 				Group group = new Group();
 				group.setName((String)name.getValue());
 				group.setCreationDate((String)creationDate.getValue());
 				group.setClosingDate((String)closingDate.getValue());
+				
+				
+				
+				String std = (String)students.getValue();
+				Integer i = Integer.valueOf(std);
+				
 
 				List<Group> gL = groupDao.getGroupByName(group.getName());
 				if(gL.size()==0){
@@ -107,7 +121,12 @@ public class GroupManagementButtonListenerLogic {
 				
 				tableGroup.addItem(group);
 				
-//				codeGroup.setValue("code : "+groupService.generatedCode(group));
+				codeGroup.setValue("code : "+groupService.generatedCode(group));
+				
+				}else{
+					Application myApp = (MyApplication)NavigableApplication.getCurrent();
+					myApp.getMainWindow().showNotification("Veulliez entrer le nombre d'étudiants");
+				}
 
 			}
 		});
@@ -120,6 +139,7 @@ public class GroupManagementButtonListenerLogic {
 				i.getItemProperty("name").setValue((String)name.getValue());
 				i.getItemProperty("creationDate").setValue((String)creationDate.getValue());
 				i.getItemProperty("closingDate").setValue((String)closingDate.getValue());
+				i.getItemProperty("students").setValue((Integer)students.getValue());
 				
 				Group g = (Group)tableGroup.getValue();
 				
@@ -144,6 +164,7 @@ public class GroupManagementButtonListenerLogic {
 				fieldValidateLayout.addComponent(name);
 				fieldValidateLayout.addComponent(creationDate);
 				fieldValidateLayout.addComponent(closingDate);
+				fieldValidateLayout.addComponent(students);
 				fieldValidateLayout.addComponent(codeGroup);
 				fieldValidateLayout.addComponent(saveCreate);
 				
@@ -167,12 +188,14 @@ public class GroupManagementButtonListenerLogic {
 					name.setValue(group.getName());
 					creationDate.setValue(group.getCreationDate());
 					closingDate.setValue(group.getClosingDate());
+					students.setValue(group.getStudents());
 
 					fieldValidateLayout.removeAllComponents();
 
 					fieldValidateLayout.addComponent(name);
 					fieldValidateLayout.addComponent(creationDate);
 					fieldValidateLayout.addComponent(closingDate);
+					fieldValidateLayout.addComponent(students);
 					fieldValidateLayout.addComponent(saveModify);
 
 

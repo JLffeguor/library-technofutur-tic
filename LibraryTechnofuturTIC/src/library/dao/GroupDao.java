@@ -52,5 +52,4 @@ public class GroupDao {
 	public List<Group> getGroupByCode(String code){
 		return em.createQuery("select g from Group g where g.code = :code").setParameter("code", code).getResultList();
 	}
-
 }

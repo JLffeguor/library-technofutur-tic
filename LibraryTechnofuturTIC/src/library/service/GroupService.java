@@ -34,8 +34,6 @@ public class GroupService {
 
 		groupDao.deleteGroup(g.getId());
 
-
-
 	}
 
 	public String generatedCode(Group group){
@@ -43,7 +41,7 @@ public class GroupService {
 		Long id = group.getId();
 		Long begin;
 
-		if((10000L+id)<99999){
+		if((10000L+id)>99999){
 			begin = group.getId();
 		}else{
 			begin = 10000L+id;
