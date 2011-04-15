@@ -8,6 +8,7 @@ import library.domain.Order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -16,7 +17,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 @Service
-public class ShoppingCart extends VerticalLayout{
+public class ShoppingCart{
 
 	@Autowired OrderDao orderDao;
 	
@@ -28,12 +29,13 @@ public class ShoppingCart extends VerticalLayout{
 		return orders;
 	}
 
+	@Transactional
 	public void addOrder(Order order) {
 		orders.add(order);
 	}
 	
-	public VerticalLayout execute(){
-		removeAllComponents();
+	public VerticalLayout getShoppingCart(){
+		
 		final VerticalLayout shoppingCartLayout = new VerticalLayout();
 		final HorizontalLayout footerShoppingCart = new HorizontalLayout();
 		shoppingCartLayout.removeAllComponents();
@@ -66,7 +68,6 @@ public class ShoppingCart extends VerticalLayout{
 					v.removeComponent(totalPrice);
 					v.removeComponent(saveOrder);
 					orders.remove(i);
-					execute();
 					totalPrice.setValue("<b>Prix total : " + Integer.toString(totalOrderPrice(orders)) + "</b>");
 					footerShoppingCart.addComponent(totalPrice);
 					footerShoppingCart.addComponent(saveOrder);
