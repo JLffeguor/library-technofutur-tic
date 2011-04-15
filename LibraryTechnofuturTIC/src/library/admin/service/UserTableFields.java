@@ -5,8 +5,7 @@ import com.vaadin.ui.TextField;
 public enum UserTableFields {
 	
 	LASTNAME("NOM", TextField.class),
-	FIRSTNAME("PRENOM", TextField.class),
-	EMAIL("EMAIL", TextField.class);
+	FIRSTNAME("PRENOM", TextField.class);
 	
 	private String nameColumn;
 	private Class classColumn;

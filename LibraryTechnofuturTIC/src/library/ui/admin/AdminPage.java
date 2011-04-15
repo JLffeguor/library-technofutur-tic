@@ -17,9 +17,9 @@ import com.vaadin.ui.VerticalLayout;
 @Configurable(preConstruction = true)
 public class AdminPage extends VerticalLayout implements Button.ClickListener{
 
-	private final Button libraryManagement = new Button("Gestion de livres");
+	private final Button libraryManagement = new Button("Gestion de livre(s)");
 	private final Button orderManagement = new Button("Livre à  commander");
-	private final Button groupManagement = new Button("Gestion de group");
+	private final Button groupManagement = new Button("Gestion de groupe(s)");
 	private final VerticalLayout dynamicLayout = new VerticalLayout();
 
 

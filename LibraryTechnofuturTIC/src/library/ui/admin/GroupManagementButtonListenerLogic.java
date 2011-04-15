@@ -1,5 +1,7 @@
 package library.ui.admin;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import library.admin.service.TableUtilities;
@@ -16,15 +18,19 @@ import org.vaadin.navigator7.NavigableApplication;
 
 import com.vaadin.Application;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -34,19 +40,6 @@ public class GroupManagementButtonListenerLogic {
 	@Autowired	GroupDao groupDao;
 	@Autowired	GroupService groupService;
 	@Autowired  UserDao userDao;
-
-	final Table tableUser;
-
-	public GroupManagementButtonListenerLogic(){
-
-		tableUser = TableUtilities.createUserTable();
-
-		tableUser.addStyleName("big strong");
-		tableUser.setSelectable(true);
-		tableUser.setImmediate(true);
-
-	}
-
 
 	public void execute(final VerticalLayout dynamicLayout){
 
@@ -71,11 +64,11 @@ public class GroupManagementButtonListenerLogic {
 		//LeftSide////LeftSide////LeftSide////LeftSide////LeftSide////LeftSide//
 		//LeftSide////LeftSide////LeftSide////LeftSide////LeftSide////LeftSide//
 		////////////////////////////////////////////////////////////////////////
-		Button createGroup = new Button("Créer un group");
+		Button createGroup = new Button("Créer un groupe");
 		createGroup.addStyleName("big");
-		Button deletGroup = new Button("Supprimer un group");
+		Button deletGroup = new Button("Supprimer un groupe");
 		deletGroup.addStyleName("big");
-		Button modifyGroup = new Button("Modifier un group");
+		Button modifyGroup = new Button("Modifier un groupe");
 		modifyGroup.addStyleName("big");
 
 
@@ -88,11 +81,40 @@ public class GroupManagementButtonListenerLogic {
 
 
 		final Table tableGroup  = new Table();
+
 		tableGroup.addStyleName("big strong");
 		tableGroup.setSelectable(true);
 		tableGroup.setImmediate(true);
 
 		BeanItemContainer<Group> bic = new BeanItemContainer<Group>(Group.class, groupDao.getGroups());
+
+		tableGroup.addGeneratedColumn("creationDate", new ColumnGenerator() {
+
+			public Component generateCell(Table source, Object itemId, Object columnId) {
+
+				Property prop = source.getItem(itemId).getItemProperty(columnId);
+
+				Date date = (Date) prop.getValue();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+				Label label = new Label(sdf.format(date));
+
+				return label;
+			}
+		});
+
+		tableGroup.addGeneratedColumn("closingDate", new ColumnGenerator() {
+
+			public Component generateCell(Table source, Object itemId, Object columnId) {
+
+				Property prop = source.getItem(itemId).getItemProperty(columnId);
+
+				Date date = (Date) prop.getValue();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+				Label label = new Label(sdf.format(date));
+
+				return label;
+			}
+		});
 
 
 		tableGroup.setContainerDataSource(bic);
@@ -101,6 +123,7 @@ public class GroupManagementButtonListenerLogic {
 
 
 		VerticalLayout tableButtonLayout = new VerticalLayout();
+		tableButtonLayout.setHeight("100%");
 		tableButtonLayout.setSpacing(true);
 
 		tableButtonLayout.addComponent(tableGroup);
@@ -113,15 +136,29 @@ public class GroupManagementButtonListenerLogic {
 
 		leftSide.addComponent(formVerticalLayout);
 
-		final TextField name = new TextField("Nom du Group");
-		final TextField creationDate = new TextField("Date de creation");
-		final TextField closingDate = new TextField("Date de cloture");
 
-		final TextField students = new TextField("Nombre d'étudiants");
+		final Table tableUser = TableUtilities.createUserTable();
+		tableUser.addStyleName("big strong");
+		tableUser.setSelectable(true);
+		tableUser.setImmediate(true);
+
+
+		final TextField name = new TextField("Nom du Groupe");
+
+
+		final DateField creationDate = new DateField("Date de création");
+		creationDate.setImmediate(true);
+		creationDate.setResolution(DateField.RESOLUTION_DAY);
+		final DateField closingDate = new DateField("Date de clotûre");
+		closingDate.setImmediate(true);
+		closingDate.setResolution(DateField.RESOLUTION_DAY);
+
+		final TextField students = new TextField("Nombres d'étudiants");
 		students.addValidator(new IntegerValidator("Vous devez mettre un nombre"));
 		students.setImmediate(true);
 
 		final Label codeGroup = new Label();
+		codeGroup.addStyleName("h1 color");
 
 		final Button saveCreate = new Button("Valider");
 		saveCreate.addStyleName("big");
@@ -138,8 +175,9 @@ public class GroupManagementButtonListenerLogic {
 
 					Group group = new Group();
 					group.setName((String)name.getValue());
-					group.setCreationDate((String)creationDate.getValue());
-					group.setClosingDate((String)closingDate.getValue());
+
+					group.setCreationDate((Date)creationDate.getValue());
+					group.setClosingDate((Date)closingDate.getValue());
 
 					String std = (String)students.getValue();
 					Integer i = Integer.valueOf(std);
@@ -148,10 +186,11 @@ public class GroupManagementButtonListenerLogic {
 
 					List<Group> gL = groupDao.getGroupByName(group.getName());
 					if(gL.size()==0){
+
 						groupDao.createGroup(group);
 						tableGroup.addItem(group);
 
-						codeGroup.setValue("code : "+groupService.generatedCode(group));
+						groupService.generatedCode(group);
 
 						formVerticalLayout.removeAllComponents();
 
@@ -181,10 +220,7 @@ public class GroupManagementButtonListenerLogic {
 
 				groupDao.upDateGroup(g);
 
-				//update userTalbe
-				fillUserTable(g);
-				rightSide.removeAllComponents();
-				rightSide.addComponent(tableUser);
+				tableGroup.select(i);
 
 				formVerticalLayout.removeAllComponents();
 
@@ -204,16 +240,14 @@ public class GroupManagementButtonListenerLogic {
 				formVerticalLayout.removeAllComponents();
 
 				name.setValue("");
-				creationDate.setValue("");
-				closingDate.setValue("");
-
-				codeGroup.setValue("code : ");
+				students.setValue("12");
+				creationDate.setValue(new Date());
+				closingDate.setValue(new Date());
 
 				formVerticalLayout.addComponent(name);
 				formVerticalLayout.addComponent(creationDate);
 				formVerticalLayout.addComponent(closingDate);
 				formVerticalLayout.addComponent(students);
-				formVerticalLayout.addComponent(codeGroup);
 
 				HorizontalLayout createAndModifyHorizontalLayout = new HorizontalLayout();
 				createAndModifyHorizontalLayout.setSpacing(true);
@@ -233,7 +267,7 @@ public class GroupManagementButtonListenerLogic {
 
 				if(item == null){
 					Application myApp = (MyApplication)NavigableApplication.getCurrent();
-					myApp.getMainWindow().showNotification("Vous devez selectionner un element dans la table");
+					myApp.getMainWindow().showNotification("Vous devez selectionner un élément dans la table");
 				}else{
 
 					Group group = (Group)tableGroup.getValue();
@@ -298,7 +332,7 @@ public class GroupManagementButtonListenerLogic {
 					});
 
 				}else{
-					myApp.getMainWindow().showNotification("Vous devez selectioner un element dans le tableau");
+					myApp.getMainWindow().showNotification("Vous devez selectioner un élément dans la table");
 				}
 			}
 
@@ -320,10 +354,18 @@ public class GroupManagementButtonListenerLogic {
 
 				if(g!=null){
 
-					fillUserTable(g);
+					tableUser.removeAllItems();
+					tableUser.setPageLength(g.getStudents());
 
 					rightSide.removeAllComponents();
+
+					codeGroup.setValue("Code : "+g.getCode());
+					rightSide.addComponent(codeGroup);
+
 					rightSide.addComponent(tableUser);
+
+					fillUserTable(g, tableUser);
+
 				}
 
 			}
@@ -332,39 +374,31 @@ public class GroupManagementButtonListenerLogic {
 
 	}
 
-	public void fillUserTable(Group g){
-
-		tableUser.removeAllItems();
-
-		tableUser.setPageLength(g.getStudents());
+	public void fillUserTable(Group g, Table table){
 
 		List<User> userList = userDao.getUsersByGroupName(g.getName());
-
 
 		int i = 0;
 
 		while(i<g.getStudents()){
 
-
 			CustomTextField firstName = new CustomTextField();
 			CustomTextField lastName = new CustomTextField();
-			CustomTextField email = new CustomTextField();
-
-//			UserEntryListener uE = new UserEntryListener(firstName, lastName, email, g);
-//
-//			firstName.addListener(uE);
-//			lastName.addListener(uE);
-//			email.addListener(uE);
 
 			if(userList.size()>i){				
 				firstName.setValue(userList.get(i).getFirstName());
 				lastName.setValue(userList.get(i).getLastName());
-				email.setValue(userList.get(i).getEmail());
 			}
 
-			tableUser.addItem(new Object[] {lastName, firstName, email}, new Integer(i));
+			table.addItem(new Object[] {lastName, firstName}, new Integer(i));
 
 			i++;
+
+			UserEntryListener uE = new UserEntryListener(firstName, lastName, g);
+
+			firstName.addListener(uE);
+			lastName.addListener(uE);
+
 
 		}
 
@@ -374,19 +408,17 @@ public class GroupManagementButtonListenerLogic {
 
 		final CustomTextField firstName;
 		final CustomTextField lastName;
-		final CustomTextField email;
 		final Group group;
 
-		public UserEntryListener(final CustomTextField fN, final CustomTextField lN, final CustomTextField eM, final Group g){
+		public UserEntryListener(final CustomTextField fN, final CustomTextField lN, final Group g){
+
 
 			this.firstName = fN;
 			this.lastName = lN;
-			this.email = eM;
 			this.group = g;
 
 			firstName.setPreviousValue((String)firstName.getValue());
 			lastName.setPreviousValue((String)lastName.getValue());
-			email.setPreviousValue((String)email.getValue());
 
 		}
 
@@ -397,12 +429,12 @@ public class GroupManagementButtonListenerLogic {
 
 			if((!"".equals(fN)&&(!"".equals(lN)))){
 
-				List<User> uLPr = userDao.getUserByFirstNameAndLastName(firstName.getPreviousValue(), lastName.getPreviousValue());
-				List<User>	uLCr = userDao.getUserByFirstNameAndLastName((String)firstName.getValue(), (String)lastName.getValue());
+				List<User> uLPr = userDao.getUserByFirstNameAndLastName(firstName.getPreviousValue().trim(), lastName.getPreviousValue().trim());
+				List<User>	uLCr = userDao.getUserByFirstNameAndLastName(((String)firstName.getValue()).trim(), ((String)lastName.getValue()).trim());
 
 				if((firstName.getPreviousValue().isEmpty())&&(lastName.getPreviousValue().isEmpty())){
 
-					if((uLPr.size()==0)&&(uLCr.size()==0)){
+					if((uLCr.size()==0)){
 
 						User u = new User();
 						u.setFirstName(fN);
@@ -410,23 +442,11 @@ public class GroupManagementButtonListenerLogic {
 						u.setGroup(group);
 
 						userDao.addUser(u);
-						
+
 						firstName.setPreviousValue((String)firstName.getValue());
 						lastName.setPreviousValue((String)lastName.getValue());
-						email.setPreviousValue((String)email.getValue());
 
-					}else if((uLPr.size()!=0)){
-						User u = uLPr.get(0);
-						u.setFirstName(fN);
-						u.setLastName(lN);
-
-						userDao.updateUser(u);
-						
-						firstName.setPreviousValue(fN);
-						lastName.setPreviousValue(lN);
-						email.setPreviousValue((String)email.getValue());
-						
-					}else if((uLCr.size()!=0)){
+					}else{
 
 						firstName.setValue("");
 						lastName.setValue("");
@@ -434,11 +454,41 @@ public class GroupManagementButtonListenerLogic {
 						myApp.getMainWindow().showNotification("Cet étudiant est déja dans la table");
 
 					}
+
+				}else{
+
+					if((uLPr.size()!=0)&&(uLCr.size()==0)){
+						User u = uLPr.get(0);
+						u.setFirstName(fN);
+						u.setLastName(lN);
+
+						userDao.updateUser(u);
+
+						firstName.setPreviousValue(fN);
+						lastName.setPreviousValue(lN);
+
+					}else if((uLCr.size()!=0)&&(uLCr.size()!=0)){
+
+						firstName.setValue(firstName.getPreviousValue());
+						lastName.setValue(lastName.getPreviousValue());
+
+						Application myApp = (MyApplication)NavigableApplication.getCurrent();
+						myApp.getMainWindow().showNotification("Ces informations correspondent à un autre étudiant dans la table");
+
+					}else if((uLPr.size()==0)&&(uLCr.size()!=0)){
+
+						firstName.setValue("");
+						lastName.setValue("");
+						Application myApp = (MyApplication)NavigableApplication.getCurrent();
+						myApp.getMainWindow().showNotification("Cet étudiant est déja dans la table");
+
+					}
+
 				}
 			}
 		}
 	}
-	
+
 	public class CustomTextField extends TextField{
 
 		private String previousValue;
@@ -457,5 +507,5 @@ public class GroupManagementButtonListenerLogic {
 		}
 
 	}
-	
+
 }

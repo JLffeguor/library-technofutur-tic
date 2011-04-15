@@ -42,11 +42,11 @@ public class GroupDao {
 	}	
 	
 	public void upDateGroup(Group group){
-		Group g = em.find(Group.class, group.getId());
-		g.setName(group.getName());
-		g.setCreationDate(group.getCreationDate());
-		g.setClosingDate(group.getClosingDate());
-		em.merge(g);
+//		Group g = em.find(Group.class, group.getId());
+//		g.setName(group.getName());
+//		g.setCreationDate(group.getCreationDate());
+//		g.setClosingDate(group.getClosingDate());
+		em.merge(group);
 	}
 	
 	public List<Group> getGroupByCode(String code){

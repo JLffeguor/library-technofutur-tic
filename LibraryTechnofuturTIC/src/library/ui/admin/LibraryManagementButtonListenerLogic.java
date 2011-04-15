@@ -204,7 +204,7 @@ public class LibraryManagementButtonListenerLogic {
 						}
 					});
 				}else{
-					myApp.getMainWindow().showNotification("Vous devez selectioner un element dans le tableau");
+					myApp.getMainWindow().showNotification("Vous devez selectioner un element dans la table");
 				}
 			}
 
