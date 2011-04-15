@@ -28,7 +28,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-
+/**
+ * The method execute is called when the button orderManagement is clicked in the AdminPage
+ */
 @Service
 public class OrderManagementButtonListenerLogic{
 
@@ -49,12 +51,14 @@ public class OrderManagementButtonListenerLogic{
 		
 		dynamicLayout.addComponent(groupButton);
 		
+		//this table will display orders
 		final Table table = TableUtilities.createOrderTable();
 		table.setPageLength(12);
 		table.addStyleName("big strong");
 		table.setVisible(false);
 		dynamicLayout.addComponent(table);
 		
+		//this button will generate a xls file and will downloaded
 		final Button excel = new Button("Télécharger fichier excel");
 		excel.addStyleName("big default");
 		dynamicLayout.addComponent(excel);
@@ -62,6 +66,7 @@ public class OrderManagementButtonListenerLogic{
 		dynamicLayout.setExpandRatio(excel, 1);
 		
 		
+		//create a button for each group and add it to groupButton
 		List<String> groupNames = groupDao.getGroupNames();
 		for (String name :  groupNames){
 			
@@ -85,6 +90,7 @@ public class OrderManagementButtonListenerLogic{
 			});
 		}
 		
+		//generate and download a xsl file with date form the table
 		excel.addListener(new Button.ClickListener() {
 			
 			public void buttonClick(ClickEvent event) {
@@ -123,12 +129,15 @@ public class OrderManagementButtonListenerLogic{
 		});
 	}
 	
+	/**
+	 * Each time a button in groupButton is clicked the table is filled with orders of given group
+	 */
 	public void fillTable(List<User> userList, List<Order> orderList, Table table){
 
 		final List<String> styleList = new ArrayList<String>();
 		table.removeAllItems();
 
-		boolean copy = false;
+		boolean copy = false;//if a user has more than one order than his information will be displayed only once and his orders will follow
 		String style = "white";
 		int i=0;
 		for(User user  : userList){
@@ -137,12 +146,12 @@ public class OrderManagementButtonListenerLogic{
 				if(order.getUser().getId().equals(user.getId())){
 					i++;
 			
-					if(copy == false){
+					if(copy == false){//new user : fill all table cell
 						table.addItem(new Object[] {user.getLastName(),user.getFirstName(),user.getEmail(),
 								order.getBook_title(), order.getAuthor(),order.getIsbn(),new CheckBox(),new CheckBox(),new CheckBox(),new CheckBox(),order.getPrice()},new Integer(i));
 						styleList.add(style);
 						copy=true;
-					}else{
+					}else{//the user has more than one order : table cell with user information will be null
 						table.addItem(new Object[] {"","","",
 								order.getBook_title(), order.getAuthor(),order.getIsbn(),new CheckBox(),new CheckBox(),new CheckBox(),new CheckBox(),order.getPrice()},new Integer(i));
 						styleList.add(style);
@@ -159,6 +168,7 @@ public class OrderManagementButtonListenerLogic{
 
 		}
 		
+		//set row color for each user
 		table.setCellStyleGenerator(new Table.CellStyleGenerator() {
 		    public String getStyle(Object itemId, Object propertyId) {
 		       int row = ((Integer)itemId).intValue();
