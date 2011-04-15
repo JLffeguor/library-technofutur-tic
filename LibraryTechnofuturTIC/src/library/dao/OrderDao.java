@@ -23,4 +23,8 @@ public class OrderDao {
 	public void deleteOrders(List<Order> orderList){
 		em.createQuery("delete from Order o where o in (:orderList)").setParameter("orderList", orderList).executeUpdate();
 	}
+	
+	public void addOrder(Order order){
+		em.persist(order);
+	}
 }
