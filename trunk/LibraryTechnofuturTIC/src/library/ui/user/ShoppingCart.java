@@ -22,6 +22,7 @@ public class ShoppingCart extends VerticalLayout{
 	
 	private List<Order> orders = new ArrayList<Order>();
 	Label totalPrice = new Label();
+	Button saveOrder = new Button("Commander le panier");
 	
 	public List<Order> getOrders() {
 		return orders;
@@ -34,18 +35,21 @@ public class ShoppingCart extends VerticalLayout{
 	public VerticalLayout execute(){
 		removeAllComponents();
 		final VerticalLayout shoppingCartLayout = new VerticalLayout();
+		final HorizontalLayout footerShoppingCart = new HorizontalLayout();
 		shoppingCartLayout.removeAllComponents();
 		shoppingCartLayout.setSpacing(true);
 		shoppingCartLayout.addStyleName("colorfont");
 		
 		for(Order o:orders){
 			final HorizontalLayout orderLayout = new HorizontalLayout();
+			orderLayout.setWidth("400px");
 			orderLayout.setSpacing(true);
 			Label titleOrder = new Label(o.getBook_title());
-			titleOrder.setWidth("60px");
+			titleOrder.setWidth("150px");
 			Label authorOder = new Label(o.getAuthor());
-			authorOder.setWidth("30px");
+			authorOder.setWidth("60px");
 			Label priceOrder = new Label(Integer.toString(o.getPrice()));
+			priceOrder.setWidth("20px");
 			
 			Button deleteButton = new Button("enlever");
 			orderLayout.addComponent(titleOrder);
@@ -60,17 +64,19 @@ public class ShoppingCart extends VerticalLayout{
 					int i = v.getComponentIndex(orderLayout);
 					v.removeComponent(orderLayout);
 					v.removeComponent(totalPrice);
+					v.removeComponent(saveOrder);
 					orders.remove(i);
 					execute();
-					totalPrice.setCaption(Integer.toString(totalOrderPrice(orders)));
-					shoppingCartLayout.addComponent(totalPrice);
+					totalPrice.setValue("<b>Prix total : " + Integer.toString(totalOrderPrice(orders)) + "</b>");
+					footerShoppingCart.addComponent(totalPrice);
+					footerShoppingCart.addComponent(saveOrder);
 				}
 			});
 		}
 		totalPrice.setValue("<b>Prix total : " + Integer.toString(totalOrderPrice(orders)) + "</b>");
 		totalPrice.setContentMode(Label.CONTENT_XHTML);
-		HorizontalLayout footerShoppingCart = new HorizontalLayout();
-		Button saveOrder = new Button("Commander le panier");
+		
+		
 		saveOrder.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				for (Order o : orders) {

@@ -53,6 +53,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	@Autowired ShoppingCart shoppingCart;
 	
 	final ListSelect userSelect = new ListSelect();
+	//this Layout contains the shopping cart o the user and all the book choose by the members of his group
 	final VerticalLayout cartAndHelpLayout = new VerticalLayout();
 	final Application myApp = (MyApplication) NavigableApplication.getCurrent();
 
@@ -60,20 +61,11 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	public UserPage(){
 		
 		setSizeFull();
-		
-	
-		//this Layout contains the shopping cart o the user and all the book choose by the members of his group
-		
 		final VerticalLayout form = new VerticalLayout();
-
-		
 		form.setSpacing(true);
-		
 		final TextField groupCode = new TextField("Code");
 		form.addComponent(groupCode);
-		
 		Button enter = new Button("Connecter");
-		
 		enter.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
@@ -198,8 +190,11 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 
 		commandLayout.addComponent(commandNewBookLayout());
 		commandLayout.addComponent(searchBookInLabraryLayout());
+//		cartAndHelpLayout.addComponent(OrderForStudentGroupLayout(user.getGroup()));
+		
 
 		addComponent(commandLayout);
+		addComponent(cartAndHelpLayout);
 	}
 
 
@@ -236,14 +231,16 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 				order.setAuthor((String)infoBooks.get("Auteur").getValue());
 				order.setBook_title((String)infoBooks.get("Titre").getValue());
 				order.setIsbn((String)infoBooks.get("ISBN").getValue());
-				if (infoBooks.get("Prix").isValid()){
-				order.setPrice(Integer.parseInt((String)infoBooks.get("Prix").getValue()));
-				}else{
+				if (infoBooks.get("Prix").isValid()) {
+					order.setPrice(Integer.parseInt((String) infoBooks.get("Prix").getValue()));
+					shoppingCart.addOrder(order);
+					cartAndHelpLayout.addComponent(shoppingCart.execute());
+				
+					addComponent(cartAndHelpLayout);
+				} else {
 					myApp.getMainWindow().showNotification("Vous devez rentrer un chiffre pour le champ prix");
 				}
-				shoppingCart.addOrder(order);
-				cartAndHelpLayout.addComponent(shoppingCart.execute());
-				addComponent(cartAndHelpLayout);
+				
 			}
 		});
 		commandNewBookLayout.addComponent(addToCart);
@@ -307,18 +304,25 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		
 		return bookInLibraryLayout;
 	}
-	public VerticalLayout shoppingCart(Book book){
-		VerticalLayout shoppingCart = new VerticalLayout();
-		
-		
-		return shoppingCart;
-	}
-
-
-
 	public void valueChange(ValueChangeEvent event) {
 		String name =  (String)userSelect.getValue();
 	}
+//	public VerticalLayout OrderForStudentGroupLayout(Group group){
+//		
+//		VerticalLayout orderForStudentGroupLayout = new VerticalLayout();
+//		Table table = new Table();
+//		table.setSelectable(false);
+//		BeanItemContainer<Order> bic = new BeanItemContainer<Order>(Order.class, orderDao.getOrderByGroupName(group.getName()));
+//		table.setContainerDataSource(bic);
+//		table.setVisibleColumns(new Object[] { "book_title", "author","isbn","price","user" });
+//		table.setColumnHeaders(new String[] { "Titre du manuel","Auteur", "ISBN" , "Prix" , "étudiant" });
+//		
+//		orderForStudentGroupLayout.addComponent(table);
+//		
+//		
+//		return orderForStudentGroupLayout;
+//		
+//	}
 
 
 
