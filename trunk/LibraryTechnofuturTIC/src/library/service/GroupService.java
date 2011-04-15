@@ -36,7 +36,7 @@ public class GroupService {
 
 	}
 
-	public String generatedCode(Group group){
+	public void generatedCode(Group group){
 
 		Long id = group.getId();
 		Long begin;
@@ -49,8 +49,8 @@ public class GroupService {
 
 		String code = (String.valueOf(begin));
 		group.setCode(code);
-		groupDao.setCode(group);
-		return code; 
+		groupDao.upDateGroup((group));
+		
 	}
 
 }

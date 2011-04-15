@@ -10,9 +10,9 @@ public enum OrderTableFields {
 	TITLE("TITRE DU MANUELLE",String.class),
 	AUTHOR("AUTEUR",String.class),
 	ISBN("ISBN",String.class),
-	ORDER("COMMANDER",CheckBox.class),
-	SUCCEED("ARRIVER",CheckBox.class),
-	TAKEN("ENLEVER",CheckBox.class),
+	ORDER("COMMANDE",CheckBox.class),
+	SUCCEED("ARRIVE",CheckBox.class),
+	TAKEN("ENLEVE",CheckBox.class),
 	INALIENABLE("INDISPONIBLE",CheckBox.class),
 	PRICE("PRIX",Integer.class);
 	

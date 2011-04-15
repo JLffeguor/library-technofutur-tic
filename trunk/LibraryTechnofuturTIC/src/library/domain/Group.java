@@ -18,9 +18,9 @@ public class Group {
 	@Column(name = "name", unique = true)
 	private String name;
 	@Column(name = "creationdate")
-	private String creationDate;
+	private Date creationDate;
 	@Column (name = "closingdate")
-	private String  closingDate;
+	private Date  closingDate;
 	@Column(name = "closed", nullable=true)
 	private boolean closed;//all book have been received and distributed
 	@Column(name = "code")
@@ -40,13 +40,13 @@ public class Group {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(String creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	public String getClosingDate() {
+	public Date getClosingDate() {
 		return closingDate;
 	}
 	public void setCode(String code) {
@@ -55,7 +55,7 @@ public class Group {
 	public String getCode() {
 		return code;
 	}
-	public void setClosingDate(String closingDate) {
+	public void setClosingDate(Date closingDate) {
 		this.closingDate = closingDate;
 	}
 	public long getId() {
