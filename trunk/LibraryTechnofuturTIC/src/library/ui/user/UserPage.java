@@ -28,6 +28,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -53,7 +54,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	
 	final ListSelect userSelect = new ListSelect();
 	final VerticalLayout cartAndHelpLayout = new VerticalLayout();
-	
+	final Application myApp = (MyApplication) NavigableApplication.getCurrent();
 
 	
 	public UserPage(){
@@ -129,8 +130,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		validateUser.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				removeAllComponents();
-				final Application myApp = (MyApplication) NavigableApplication
-						.getCurrent();
+				
 				if (!userSelect.isNullSelectionAllowed()) {
 					String lastNameAndFirstName = (String) userSelect.getValue();
 					final String firstName = lastNameAndFirstName.substring(0,lastNameAndFirstName.indexOf(" "));
@@ -206,11 +206,11 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	//The user know what book he will, thus he can fill in
 	public VerticalLayout commandNewBookLayout(){
 		
-		VerticalLayout newBookLayout = new VerticalLayout();
-		newBookLayout.setSpacing(true);
+		VerticalLayout commandNewBookLayout = new VerticalLayout();
+		commandNewBookLayout.setSpacing(true);
 		
 		Label titleLayoutLabel = new Label ("Je connais déjà le livre que je veux");
-		newBookLayout.addComponent(titleLayoutLabel);
+		commandNewBookLayout.addComponent(titleLayoutLabel);
 		final Map<String, TextField> infoBooks = new HashMap<String, TextField>();
 		List<String> infoBook = new ArrayList<String>();
 		
@@ -222,8 +222,11 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		for(String str: infoBook){
 			TextField informationBookTextField = new TextField(str);
 			informationBookTextField.setStyleName("align-right");
+			if(str.equals("Prix")){
+				informationBookTextField.addValidator(new IntegerValidator("Vous n'avez pas rentré un chiffre pour le champ prix"));
+			}
 			infoBooks.put(str, informationBookTextField);
-			newBookLayout.addComponent(informationBookTextField);
+			commandNewBookLayout.addComponent(informationBookTextField);
 		}
 		Button addToCart = new Button("J'ajoute le livre a mon panier");
 		addToCart.addListener(new Button.ClickListener() {
@@ -233,14 +236,18 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 				order.setAuthor((String)infoBooks.get("Auteur").getValue());
 				order.setBook_title((String)infoBooks.get("Titre").getValue());
 				order.setIsbn((String)infoBooks.get("ISBN").getValue());
+				if (infoBooks.get("Prix").isValid()){
 				order.setPrice(Integer.parseInt((String)infoBooks.get("Prix").getValue()));
+				}else{
+					myApp.getMainWindow().showNotification("Vous devez rentrer un chiffre pour le champ prix");
+				}
 				shoppingCart.addOrder(order);
 				cartAndHelpLayout.addComponent(shoppingCart.execute());
 				addComponent(cartAndHelpLayout);
 			}
 		});
-		newBookLayout.addComponent(addToCart);
-		return newBookLayout;
+		commandNewBookLayout.addComponent(addToCart);
+		return commandNewBookLayout;
 	}
 	public VerticalLayout searchBookInLabraryLayout(){
 		
@@ -257,7 +264,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 			public void buttonClick(ClickEvent event) {
 				if (library.getComponentCount() == 0) {
 					library.removeAllComponents();
-					Table table = new Table();
+					final Table table = new Table();
 					table.addStyleName("big strong");
 					table.setSelectable(true);
 					table.setImmediate(true);
@@ -272,7 +279,15 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 					Button addToCart = new Button("Ajouter a mon panier");
 					addToCart.addListener(new Button.ClickListener() {
 						public void buttonClick(ClickEvent event) {
-							// TODO add book to cart
+							cartAndHelpLayout.removeAllComponents();
+							Book book = (Book)table.getValue();
+							Order order = new Order();
+							order.setAuthor(book.getAuthor());
+							order.setBook_title(book.getTitle());
+							order.setIsbn(book.getIsbn());
+							shoppingCart.addOrder(order);
+							cartAndHelpLayout.addComponent(shoppingCart.execute());
+							addComponent(cartAndHelpLayout);
 						}
 					});
 					library.addComponent(addToCart);
