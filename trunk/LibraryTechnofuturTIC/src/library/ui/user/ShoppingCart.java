@@ -42,18 +42,21 @@ public class ShoppingCart{
 		shoppingCartLayout.setSpacing(true);
 		shoppingCartLayout.addStyleName("colorfont");
 		
+		//create the shopping cart
 		for(Order o:orders){
 			final HorizontalLayout orderLayout = new HorizontalLayout();
+			Label titleOrder = new Label(o.getBook_title());
+			Label authorOder = new Label(o.getAuthor());
+			Label priceOrder = new Label(Integer.toString(o.getPrice()));
+			Button deleteButton = new Button("enlever");
+			
 			orderLayout.setWidth("400px");
 			orderLayout.setSpacing(true);
-			Label titleOrder = new Label(o.getBook_title());
 			titleOrder.setWidth("150px");
-			Label authorOder = new Label(o.getAuthor());
 			authorOder.setWidth("60px");
-			Label priceOrder = new Label(Integer.toString(o.getPrice()));
 			priceOrder.setWidth("20px");
 			
-			Button deleteButton = new Button("enlever");
+			
 			orderLayout.addComponent(titleOrder);
 			orderLayout.addComponent(authorOder);
 			orderLayout.addComponent(priceOrder);
@@ -64,10 +67,14 @@ public class ShoppingCart{
 				public void buttonClick(ClickEvent event) {
 					VerticalLayout v  = (VerticalLayout)orderLayout.getParent();
 					int i = v.getComponentIndex(orderLayout);
+					//remove all component a the shoppingcart and the footershopping cart
+					//maybe use
+					//removeAllComponent();
 					v.removeComponent(orderLayout);
 					v.removeComponent(totalPrice);
 					v.removeComponent(saveOrder);
-					orders.remove(i);
+					
+					orders.remove(i);//delete the order in the order list
 					totalPrice.setValue("<b>Prix total : " + Integer.toString(totalOrderPrice(orders)) + "</b>");
 					footerShoppingCart.addComponent(totalPrice);
 					footerShoppingCart.addComponent(saveOrder);
@@ -77,7 +84,10 @@ public class ShoppingCart{
 		totalPrice.setValue("<b>Prix total : " + Integer.toString(totalOrderPrice(orders)) + "</b>");
 		totalPrice.setContentMode(Label.CONTENT_XHTML);
 		
-		
+		/**
+		 * TODO
+		 * this code must be change . Read the rapport for more explanation
+		 * */
 		saveOrder.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				for (Order o : orders) {
@@ -91,6 +101,7 @@ public class ShoppingCart{
 
 		return shoppingCartLayout;
 	}
+	//calculate the total price of a shopping cart
 	public int totalOrderPrice(List<Order> orderList){
 		int sum = 0;
 		for (Order o:orderList){
