@@ -17,10 +17,10 @@ import com.vaadin.ui.VerticalLayout;
 @Configurable(preConstruction = true)
 public class AdminPage extends VerticalLayout implements Button.ClickListener{
 
-	private final Button libraryManagement = new Button("Gestion de livre(s)");
-	private final Button orderManagement = new Button("Livre à  commander");
-	private final Button groupManagement = new Button("Gestion de groupe(s)");
-	private final VerticalLayout dynamicLayout = new VerticalLayout();
+	private final Button libraryManagement = new Button("Gestion de livre(s)");//menu button
+	private final Button orderManagement = new Button("Livre à  commander");//menu button
+	private final Button groupManagement = new Button("Gestion de groupe(s)");//menu button
+	private final VerticalLayout dynamicLayout = new VerticalLayout();// this layout will contain data in function of menu buttons 
 
 
 	@Autowired  OrderManagementButtonListenerLogic orderManagementButtonListenerLogic;
@@ -34,6 +34,7 @@ public class AdminPage extends VerticalLayout implements Button.ClickListener{
 		dynamicLayout.setSpacing(true);
 		dynamicLayout.setSizeFull();
 
+		//this layout will contain the menu buttons
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.setStyleName("toolbar");
 		buttonLayout.setMargin(true);
