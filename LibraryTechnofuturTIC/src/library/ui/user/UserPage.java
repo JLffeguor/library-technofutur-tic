@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.event.ChangeEvent;
-
 import library.dao.BookDao;
 import library.dao.GroupDao;
 import library.dao.OrderDao;
@@ -24,7 +22,6 @@ import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.Page;
 
 import com.vaadin.Application;
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
@@ -75,7 +72,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 				listGroup = groupDao.getGroupByCode((String)groupCode.getValue());
 				if (listGroup.isEmpty()) {
 					Application myApp = (MyApplication) NavigableApplication.getCurrent();
-					myApp.getMainWindow().showNotification("Aucun groupe n'a ce code. Ré-essaier");
+					myApp.getMainWindow().showNotification("Aucun groupe n'a ce code. Ré-essaié");
 
 				} else {
 					addComponent(selectStudentLayout(((String)groupCode.getValue()), listGroup.get(0)));
@@ -93,7 +90,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	}
 	
 
-
+	//this layout display the list of the student in the group that the user entered(groupCode)
 	public VerticalLayout selectStudentLayout(String groupCode, final Group g){
 		removeAllComponents();
 		final VerticalLayout selectStudentLayout = new VerticalLayout();
@@ -114,6 +111,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		userSelect.setImmediate(true); // send the change to the server at once
 
 		
+		
 		Button validateUser = new Button("OK");
 		validateUser.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
@@ -123,9 +121,9 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 					String lastNameAndFirstName = (String) userSelect.getValue();
 					final String firstName = lastNameAndFirstName.substring(0,lastNameAndFirstName.indexOf(" "));
 					final String lastName = lastNameAndFirstName.substring(lastNameAndFirstName.indexOf(" ") + 1);
-					
+					//we get the user
 					final User u = userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0);
-
+					//we check if he user have fill in his email
 					if (u.getEmail() == null) {
 						final Window enterEmail = new Window();
 						enterEmail.center();
@@ -245,6 +243,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		commandNewBookLayout.addComponent(addToCart);
 		return commandNewBookLayout;
 	}
+	//display all book in the library
 	public VerticalLayout searchBookInLabraryLayout(final User user, final Group group){
 		
 		final boolean bookVisible = false;
@@ -254,8 +253,9 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		Button displayAllBook = new Button("Liste Complète");
 		HorizontalLayout searchLayout = new HorizontalLayout();
 		searchLayout.setSpacing(true);
-		Button searchByKeyWord = new Button("recherche par mot-clef sur le titre");
-		final VerticalLayout library = new VerticalLayout();
+//		TODO the option search must be add in the next iteration of the project
+//		Button searchByKeyWord = new Button("recherche par mot-clef sur le titre");
+		final VerticalLayout library = new VerticalLayout();//contain the list of the book
 		displayAllBook.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				if (library.getComponentCount() == 0) {
@@ -264,7 +264,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 					table.addStyleName("big strong");
 					table.setSelectable(true);
 					table.setImmediate(true);
-
+					//BeanItemContainer used for display all the book
 					BeanItemContainer<Book> bic = new BeanItemContainer<Book>(Book.class, bookDao.getBooks());
 					table.setContainerDataSource(bic);
 					table.setVisibleColumns(new Object[] { "title", "author","isbn" });
@@ -272,6 +272,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 
 					library.addComponent(table);
 
+					//add a new order in the shopping cart
 					Button addToCart = new Button("Ajouter a mon panier");
 					addToCart.addListener(new Button.ClickListener() {
 						public void buttonClick(ClickEvent event) {
@@ -297,7 +298,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 			}
 		});
 		TextField keyword =  new TextField();
-		searchLayout.addComponent(searchByKeyWord);
+//		searchLayout.addComponent(searchByKeyWord);
 		searchLayout.addComponent(keyword);
 		buttonPanel.addComponent(displayAllBook);
 		buttonPanel.addComponent(searchLayout);
