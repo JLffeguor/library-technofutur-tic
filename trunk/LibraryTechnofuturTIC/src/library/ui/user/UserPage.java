@@ -177,6 +177,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		return selectStudentLayout;
 
 	}
+	//right part of the window how contain command option
 	public void commandLayout(User user){
 		removeAllComponents();
 		Label nameLabel = new Label(user.getFirstName() + " " + user.getLastName() + ": " + user.getEmail());
@@ -186,8 +187,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		commandLayout.setSpacing(true);
 
 		commandLayout.addComponent(commandNewBookLayout(user,user.getGroup()));
-		commandLayout.addComponent(searchBookInLabraryLayout());
-//		cartAndHelpLayout.addComponent(OrderForStudentGroupLayout(user.getGroup()));
+		commandLayout.addComponent(searchBookInLabraryLayout(user,user.getGroup()));
 		
 
 		addComponent(commandLayout);
@@ -245,7 +245,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		commandNewBookLayout.addComponent(addToCart);
 		return commandNewBookLayout;
 	}
-	public VerticalLayout searchBookInLabraryLayout(){
+	public VerticalLayout searchBookInLabraryLayout(final User user, final Group group){
 		
 		final boolean bookVisible = false;
 		final VerticalLayout bookInLibraryLayout = new VerticalLayout();
@@ -281,6 +281,8 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 							order.setAuthor(book.getAuthor());
 							order.setBook_title(book.getTitle());
 							order.setIsbn(book.getIsbn());
+							order.setUser(user);
+							order.setGroup(group);
 							shoppingCart.addOrder(order);
 							cartAndHelpLayout.addComponent(shoppingCart.getShoppingCart());
 							addComponent(cartAndHelpLayout);
