@@ -53,6 +53,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	@Autowired ShoppingCart shoppingCart;
 	
 	final ListSelect userSelect = new ListSelect();
+	
 	//this Layout contains the shopping cart o the user and all the book choose by the members of his group
 	final VerticalLayout cartAndHelpLayout = new VerticalLayout();
 	final Application myApp = (MyApplication) NavigableApplication.getCurrent();
@@ -69,20 +70,15 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		enter.addListener(new Button.ClickListener() {
 
 			public void buttonClick(ClickEvent event) {
-				// boolean verify =
-				// userService.checkIfUserRegistered((String)firstName.getValue(),(String)code.getValue());
-				// if(verify){
-
+				
 				List<Group> listGroup = new ArrayList<Group>();
 				listGroup = groupDao.getGroupByCode((String)groupCode.getValue());
 				if (listGroup.isEmpty()) {
 					Application myApp = (MyApplication) NavigableApplication.getCurrent();
 					myApp.getMainWindow().showNotification("Aucun groupe n'a ce code. Ré-essaier");
-					removeAllComponents();
-					addComponent(form);
 
 				} else {
-					addComponent(selectStudentLayout((String)groupCode.getValue()));
+					addComponent(selectStudentLayout(((String)groupCode.getValue()), listGroup.get(0)));
 				}
 
 			}
@@ -98,19 +94,19 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	
 
 
-	public VerticalLayout selectStudentLayout(String groupCode){
+	public VerticalLayout selectStudentLayout(String groupCode, final Group g){
 		removeAllComponents();
 		final VerticalLayout selectStudentLayout = new VerticalLayout();
 		List<User> userList = new ArrayList<User>();
-		List<Group> groups = new ArrayList<Group>();
 		List<String> nameList = new ArrayList<String>();
 		
-		groups = groupDao.getGroupByCode(groupCode);//We find the groupName
-		userList = userDao.getUsersByGroupName(groups.get(0).getName());//we find all user in the group
+	
+		userList = userDao.getUsersByGroupName(g.getName());//we find all users in the group
 	
 		for(User u:userList){
 			nameList.add(u.getFirstName() + " " + u.getLastName()); //create the list with only FirstName and LastName
 		}
+		
 		userSelect.setCaption("Selectionner votre nom dans la liste. Puis cliquer sur OK");
 		userSelect.setContainerDataSource(new BeanItemContainer<String>(String.class, nameList));
 		
@@ -123,13 +119,14 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 			public void buttonClick(ClickEvent event) {
 				removeAllComponents();
 				
-				if (!userSelect.isNullSelectionAllowed()) {
+				if (userSelect.getValue()!=null) {
 					String lastNameAndFirstName = (String) userSelect.getValue();
 					final String firstName = lastNameAndFirstName.substring(0,lastNameAndFirstName.indexOf(" "));
 					final String lastName = lastNameAndFirstName.substring(lastNameAndFirstName.indexOf(" ") + 1);
-					System.out.println(lastName + ":" + firstName);
+					
+					final User u = userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0);
 
-					if (userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0).getEmail() == null) {
+					if (u.getEmail() == null) {
 						final Window enterEmail = new Window();
 						enterEmail.center();
 						enterEmail.setResizable(false);
@@ -143,15 +140,15 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 
 						validateEmail.addListener(new Button.ClickListener() {
 							public void buttonClick(ClickEvent event) {
-								if (!email.isNullSettingAllowed()) {
-									User user = userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0);
-									user.setEmail((String) email.getValue());
-									userDao.updateUser(user);
+								if (!((String)email.getValue()).isEmpty()) {
+									
+									u.setEmail((String) email.getValue());
+									userDao.updateUser(u);
 									myApp.getMainWindow().removeWindow(enterEmail);
 									removeAllComponents();
-									commandLayout(userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0));
+									commandLayout(u);
 								} else {
-									myApp.getMainWindow().showNotification("Voud devez entrer votre adresse mail");
+									myApp.getMainWindow().showNotification("Vous devez entrer votre adresse mail");
 									removeAllComponents();
 									myApp.getMainWindow().addWindow(enterEmail);
 								}
@@ -162,7 +159,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 						
 					} else {
 						
-						commandLayout(userDao.getUserByFirstNameAndLastName(firstName, lastName).get(0));
+						commandLayout(u);
 						
 					}
 				}else{
@@ -198,7 +195,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 	}
 
 
-	//The user know what book he will, thus he can fill in
+	//The user knows what book he will, thus he can fill in
 	public VerticalLayout commandNewBookLayout(){
 		
 		VerticalLayout commandNewBookLayout = new VerticalLayout();
@@ -234,7 +231,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 				if (infoBooks.get("Prix").isValid()) {
 					order.setPrice(Integer.parseInt((String) infoBooks.get("Prix").getValue()));
 					shoppingCart.addOrder(order);
-					cartAndHelpLayout.addComponent(shoppingCart.execute());
+					cartAndHelpLayout.addComponent(shoppingCart.getShoppingCart());
 				
 					addComponent(cartAndHelpLayout);
 				} else {
@@ -283,7 +280,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 							order.setBook_title(book.getTitle());
 							order.setIsbn(book.getIsbn());
 							shoppingCart.addOrder(order);
-							cartAndHelpLayout.addComponent(shoppingCart.execute());
+							cartAndHelpLayout.addComponent(shoppingCart.getShoppingCart());
 							addComponent(cartAndHelpLayout);
 						}
 					});
