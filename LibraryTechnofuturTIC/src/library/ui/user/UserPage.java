@@ -185,7 +185,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 		commandLayout.addComponent(nameLabel);
 		commandLayout.setSpacing(true);
 
-		commandLayout.addComponent(commandNewBookLayout());
+		commandLayout.addComponent(commandNewBookLayout(user,user.getGroup()));
 		commandLayout.addComponent(searchBookInLabraryLayout());
 //		cartAndHelpLayout.addComponent(OrderForStudentGroupLayout(user.getGroup()));
 		
@@ -196,7 +196,7 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 
 
 	//The user knows what book he will, thus he can fill in
-	public VerticalLayout commandNewBookLayout(){
+	public VerticalLayout commandNewBookLayout(final User user, final Group group){
 		
 		VerticalLayout commandNewBookLayout = new VerticalLayout();
 		commandNewBookLayout.setSpacing(true);
@@ -228,6 +228,8 @@ public class UserPage extends HorizontalLayout implements Property.ValueChangeLi
 				order.setAuthor((String)infoBooks.get("Auteur").getValue());
 				order.setBook_title((String)infoBooks.get("Titre").getValue());
 				order.setIsbn((String)infoBooks.get("ISBN").getValue());
+				order.setGroup(group);
+				order.setUser(user);
 				if (infoBooks.get("Prix").isValid()) {
 					order.setPrice(Integer.parseInt((String) infoBooks.get("Prix").getValue()));
 					shoppingCart.addOrder(order);
