@@ -174,7 +174,7 @@
 			<attribute name="org.eclipse.ajdt.aspectpath" value="org.eclipse.ajdt.aspectpath"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/aspectjrt.jar"/>
+	<classpathentry kind="lib" path="F:/Eclipse/eclipse-jee-helios-SR1-win32/eclipse/plugins/org.aspectj.runtime_1.6.12.20110404113900/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jxl.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
